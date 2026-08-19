@@ -1,0 +1,24 @@
+/**
+ * CampusOS — Marks & Grade Book Stylesheet (css/marks.css)
+ * Phase 12: Attendance, Assignments & Marks
+ */
+
+.marks-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.score-high {
+  color: #059669;
+}
+
+.score-med {
+  color: #d97706;
+}
+
+.score-low {
+  color: #dc2626;
+}

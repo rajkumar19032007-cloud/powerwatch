@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CampusOS — Smart College Management & Student Portal. Unified SaaS platform for students, faculty, and administrators.">
+  <title>CampusOS — Smart College Management & Student Portal</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. Header & Navigation
+       ========================================================================= -->
+  <header class="site-header" id="site-header">
+    <div class="container navbar">
+      <!-- Brand Logo -->
+      <a href="index.html" class="brand" aria-label="CampusOS Home">
+        <span class="brand-icon" aria-hidden="true">C</span>
+        <span>CampusOS</span>
+        <span class="brand-badge">SaaS</span>
+      </a>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu" id="nav-menu" aria-label="Main Navigation">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#departments" class="nav-link">Departments</a>
+        <a href="#events" class="nav-link">Events</a>
+        <a href="#about" class="nav-link">About</a>
+        <div class="mobile-nav-action">
+          <a href="pages/login.html" class="btn btn-primary btn-sm" style="width: 100%;">Sign In to Portal</a>
+        </div>
+      </nav>
+
+      <!-- Desktop Login Action & Mobile Toggle Button -->
+      <div class="nav-actions">
+        <a href="pages/login.html" class="btn btn-primary btn-sm">Login</a>
+      </div>
+
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" type="button">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================================================================
+         2. Hero Section
+         ========================================================================= -->
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Hero Left Column: Headline and CTAs -->
+          <div class="hero-content">
+            <div class="hero-tag">
+              <span class="hero-tag-dot" aria-hidden="true"></span>
+              SMART CAMPUS PLATFORM
+            </div>
+
+            <h1 class="hero-title">
+              Everything Your Campus Needs, <span class="highlight">In One Place.</span>
+            </h1>
+
+            <p class="hero-description">
+              CampusOS connects students, faculty and administrators through one unified platform. Streamline academic schedules, attendance, grades, and campus notices with modern, intuitive SaaS technology.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#features" class="btn btn-primary btn-lg">Explore CampusOS</a>
+              <a href="pages/login.html" class="btn btn-secondary btn-lg">Login</a>
+            </div>
+
+            <!-- Platform Highlights -->
+            <div class="hero-stats-row">
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">100%</span>
+                <span class="hero-stat-label">Unified Platform</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">3 Roles</span>
+                <span class="hero-stat-label">Student • Faculty • Admin</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-value">Real-Time</span>
+                <span class="hero-stat-label">Campus Updates</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Right Column: Pure CSS Dashboard Mockup Visual -->
+          <div class="hero-visual">
+            <div class="dashboard-mockup" aria-label="CampusOS Student Portal Interactive Preview">
+              <!-- Window Control Bar -->
+              <div class="mockup-window-bar">
+                <div class="window-dots" aria-hidden="true">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+                <span class="mockup-window-title">campus-os.portal/student/preview</span>
+                <span style="width: 32px;"></span>
+              </div>
+
+              <!-- Mockup Content Body -->
+              <div class="mockup-body">
+                <!-- User Profile Header -->
+                <div class="mockup-user-bar">
+                  <div class="mockup-user-info">
+                    <div class="mockup-avatar" aria-hidden="true">AS</div>
+                    <div>
+                      <div class="mockup-user-name">Alex Smith</div>
+                      <div class="mockup-user-role">B.Tech Computer Science • Semester 6</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-success">Active</span>
+                </div>
+
+                <!-- Key Metrics Grid -->
+                <div class="mockup-metrics-grid">
+                  <!-- Attendance Metric -->
+                  <div class="mockup-card">
+                    <div class="mockup-card-label">Semester Attendance</div>
+                    <div class="mockup-card-value">92.4%</div>
+                    <div class="mockup-progress-bg" aria-hidden="true">
+                      <div class="mockup-progress-fill" style="width: 92.4%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- CGPA & Rank Metric -->
+                  <div class="mockup-card">
+                    <div class="mockup-card-label">Current CGPA</div>
+                    <div class="mockup-card-value">
+                      8.92 <span style="font-size: 0.75rem; color: var(--color-success); font-weight: 700;">+0.3 (#4)</span>
+                    </div>
+                    <div class="mockup-progress-bg" aria-hidden="true">
+                      <div class="mockup-progress-fill" style="width: 89.2%; background: linear-gradient(90deg, #10b981, #06b6d4);"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pure CSS Weekly Attendance / Performance Chart Visual -->
+                <div class="mockup-chart-box">
+                  <div class="mockup-chart-header">
+                    <span class="mockup-chart-title">Weekly Attendance Activity</span>
+                    <span class="badge badge-primary" style="font-size: 0.65rem;">This Week</span>
+                  </div>
+                  <div class="mockup-chart-bars" aria-hidden="true">
+                    <div class="chart-bar-col">
+                      <div class="chart-bar active" style="height: 95%;"></div>
+                      <span class="chart-label">Mon</span>
+                    </div>
+                    <div class="chart-bar-col">
+                      <div class="chart-bar active" style="height: 100%;"></div>
+                      <span class="chart-label">Tue</span>
+                    </div>
+                    <div class="chart-bar-col">
+                      <div class="chart-bar active" style="height: 85%;"></div>
+                      <span class="chart-label">Wed</span>
+                    </div>
+                    <div class="chart-bar-col">
+                      <div class="chart-bar active" style="height: 90%;"></div>
+                      <span class="chart-label">Thu</span>
+                    </div>
+                    <div class="chart-bar-col">
+                      <div class="chart-bar active" style="height: 92%;"></div>
+                      <span class="chart-label">Fri</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Assignment Progress Card -->
+                <div class="mockup-card" style="padding: 0.75rem 0.9rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                    <span class="mockup-card-label" style="margin: 0;">Assignment Progress</span>
+                    <span style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary);">3 of 4 Submitted</span>
+                  </div>
+                  <div class="mockup-progress-bg" aria-hidden="true" style="margin: 0;">
+                    <div class="mockup-progress-fill" style="width: 75%; background: linear-gradient(90deg, var(--color-primary), var(--color-purple));"></div>
+                  </div>
+                </div>
+
+                <!-- Schedule Preview List -->
+                <div class="mockup-schedule-list">
+                  <div class="mockup-schedule-item">
+                    <div>
+                      <div class="mockup-class-name">Advanced Database Systems</div>
+                      <div class="mockup-class-room">Lab 4 • Prof. Davis</div>
+                    </div>
+                    <span class="mockup-class-time">10:00 AM</span>
+                  </div>
+
+                  <div class="mockup-schedule-item">
+                    <div>
+                      <div class="mockup-class-name">Artificial Intelligence & ML</div>
+                      <div class="mockup-class-room">Seminar Hall B • Dr. Patel</div>
+                    </div>
+                    <span class="mockup-class-time">01:30 PM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         3. Statistics Section (Compact SaaS Metrics)
+         ========================================================================= -->
+    <section class="stats-section" id="stats" aria-label="Campus Metrics & Impact">
+      <div class="container">
+        <div class="stats-grid">
+          <!-- Stat 1 -->
+          <div class="stat-card">
+            <div class="stat-number">5,000+</div>
+            <div class="stat-title">Active Students</div>
+            <div class="stat-subtext">Enrolled across all academic departments</div>
+          </div>
+
+          <!-- Stat 2 -->
+          <div class="stat-card">
+            <div class="stat-number">250+</div>
+            <div class="stat-title">Faculty Members</div>
+            <div class="stat-subtext">Distinguished professors & researchers</div>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="stat-card">
+            <div class="stat-number">40+</div>
+            <div class="stat-title">Academic Programs</div>
+            <div class="stat-subtext">Undergraduate & postgraduate degrees</div>
+          </div>
+
+          <!-- Stat 4 -->
+          <div class="stat-card">
+            <div class="stat-number">95%</div>
+            <div class="stat-title">Digital Engagement</div>
+            <div class="stat-subtext">Active daily platform adoption</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         4. Features Section
+         ========================================================================= -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Key Modules</span>
+          <h2 class="section-title">Designed for Modern Academic Life</h2>
+          <p class="section-description">
+            CampusOS replaces fragmented tools with a powerful, integrated workspace tailored for every member of the institution.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Feature Card 1: Smart Attendance -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-title">Smart Attendance</h3>
+            <p class="feature-description">
+              Track attendance efficiently and understand attendance patterns. Automated subject calculations, shortfall alerts, and faculty marking tools.
+            </p>
+          </div>
+
+          <!-- Feature Card 2: Academic Management -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-title">Academic Management</h3>
+            <p class="feature-description">
+              Keep assignments, marks and academic information organized. Interactive timetables, syllabus tracking, and digital coursework submissions.
+            </p>
+          </div>
+
+          <!-- Feature Card 3: Campus Communication -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-title">Campus Communication</h3>
+            <p class="feature-description">
+              Receive announcements, notices and important campus updates. Broadcast notices, department circulars, and direct faculty office hours.
+            </p>
+          </div>
+
+          <!-- Feature Card 4: Performance Analytics -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">Performance Analytics</h3>
+            <p class="feature-description">
+              Understand academic progress through clear visual insights. Internal marks calculation, GPA projection models, and semester trends.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         5. Departments Section
+         ========================================================================= -->
+    <section class="section section-alt" id="departments">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Academic Branches</span>
+          <h2 class="section-title">Academic Departments</h2>
+          <p class="section-description">
+            Offering specialized curricula, advanced laboratories, and research programs across premier engineering and technology disciplines.
+          </p>
+        </div>
+
+        <div class="departments-grid" id="landing-departments-grid">
+          <!-- Department 1 -->
+          <div class="department-card">
+            <div>
+              <div class="dept-header">
+                <span class="dept-code">CSE</span>
+                <span class="dept-icon" aria-hidden="true">💻</span>
+              </div>
+              <h3 class="dept-name">Computer Science & Engineering</h3>
+              <p class="dept-description">
+                Focusing on algorithms, system architecture, software engineering, and advanced computing paradigms.
+              </p>
+            </div>
+            <div class="dept-footer">
+              <span class="dept-meta-item">4 Years B.Tech</span>
+              <span class="dept-meta-item">6 Specialized Labs</span>
+            </div>
+          </div>
+
+          <!-- Department 2 -->
+          <div class="department-card">
+            <div>
+              <div class="dept-header">
+                <span class="dept-code">IT</span>
+                <span class="dept-icon" aria-hidden="true">🌐</span>
+              </div>
+              <h3 class="dept-name">Information Technology</h3>
+              <p class="dept-description">
+                Bridging cloud systems, cybersecurity, network architecture, and modern distributed web applications.
+              </p>
+            </div>
+            <div class="dept-footer">
+              <span class="dept-meta-item">4 Years B.Tech</span>
+              <span class="dept-meta-item">5 Specialized Labs</span>
+            </div>
+          </div>
+
+          <!-- Department 3 -->
+          <div class="department-card">
+            <div>
+              <div class="dept-header">
+                <span class="dept-code">ECE</span>
+                <span class="dept-icon" aria-hidden="true">📡</span>
+              </div>
+              <h3 class="dept-name">Electronics & Communication Engineering</h3>
+              <p class="dept-description">
+                Specializing in VLSI design, signal processing, embedded systems, robotics, and wireless communications.
+              </p>
+            </div>
+            <div class="dept-footer">
+              <span class="dept-meta-item">4 Years B.Tech</span>
+              <span class="dept-meta-item">8 Hardware Labs</span>
+            </div>
+          </div>
+
+          <!-- Department 4 -->
+          <div class="department-card">
+            <div>
+              <div class="dept-header">
+                <span class="dept-code">MECH</span>
+                <span class="dept-icon" aria-hidden="true">⚙️</span>
+              </div>
+              <h3 class="dept-name">Mechanical Engineering</h3>
+              <p class="dept-description">
+                Covering thermodynamics, robotics, CAD/CAM manufacturing, and sustainable automotive engineering.
+              </p>
+            </div>
+            <div class="dept-footer">
+              <span class="dept-meta-item">4 Years B.Tech</span>
+              <span class="dept-meta-item">7 Workshop Labs</span>
+            </div>
+          </div>
+
+          <!-- Department 5 -->
+          <div class="department-card">
+            <div>
+              <div class="dept-header">
+                <span class="dept-code">CIVIL</span>
+                <span class="dept-icon" aria-hidden="true">🏗️</span>
+              </div>
+              <h3 class="dept-name">Civil Engineering</h3>
+              <p class="dept-description">
+                Dedicated to structural design, environmental engineering, geotechnics, and smart urban infrastructure.
+              </p>
+            </div>
+            <div class="dept-footer">
+              <span class="dept-meta-item">4 Years B.Tech</span>
+              <span class="dept-meta-item">5 Testing Labs</span>
+            </div>
+          </div>
+
+          <!-- Department 6 -->
+          <div class="department-card">
+            <div>
+              <div class="dept-header">
+                <span class="dept-code">AI & DS</span>
+                <span class="dept-icon" aria-hidden="true">🧠</span>
+              </div>
+              <h3 class="dept-name">Artificial Intelligence & Data Science</h3>
+              <p class="dept-description">
+                Advanced studies in deep learning, neural networks, big data analytics, and autonomous AI systems.
+              </p>
+            </div>
+            <div class="dept-footer">
+              <span class="dept-meta-item">4 Years B.Tech</span>
+              <span class="dept-meta-item">GPU Computing Lab</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         6. Events Section
+         ========================================================================= -->
+    <section class="section" id="events">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Campus Life</span>
+          <h2 class="section-title">Upcoming College Events</h2>
+          <p class="section-description">
+            Participate in technical symposiums, hackathons, and cultural festivals happening across our campus.
+          </p>
+        </div>
+
+        <div class="events-grid" id="landing-events-grid">
+          <!-- Event 1: Tech Symposium -->
+          <div class="event-card">
+            <div class="event-header">
+              <div class="event-date-box">
+                <div class="event-day">14</div>
+                <div class="event-month">OCT</div>
+              </div>
+              <span class="event-demo-tag">Sample Event</span>
+            </div>
+            <div class="event-body">
+              <span class="event-category">Technical Symposium</span>
+              <h3 class="event-title">Annual Tech Symposium 2026</h3>
+              <p class="event-description">
+                A 24-hour national hackathon, paper presentations, and robotics challenge featuring teams from 50+ universities.
+              </p>
+              <div class="event-meta">
+                <div class="event-meta-item">
+                  <span class="event-meta-icon" aria-hidden="true">📍</span>
+                  <span>Main Campus Auditorium</span>
+                </div>
+                <div class="event-meta-item">
+                  <span class="event-meta-icon" aria-hidden="true">⏰</span>
+                  <span>09:00 AM – 06:00 PM</span>
+                </div>
+              </div>
+              <div class="event-actions">
+                <button class="btn btn-secondary btn-sm btn-demo-action" type="button" style="width: 100%;">View Event Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 2: Innovation Hackathon -->
+          <div class="event-card">
+            <div class="event-header">
+              <div class="event-date-box">
+                <div class="event-day">05</div>
+                <div class="event-month">NOV</div>
+              </div>
+              <span class="event-demo-tag">Sample Event</span>
+            </div>
+            <div class="event-body">
+              <span class="event-category">Hackathon & Venture</span>
+              <h3 class="event-title">Inter-College Innovation Hackathon</h3>
+              <p class="event-description">
+                48 hours of rapid prototyping, mentorship from industry architects, and seed funding prizes for winning student teams.
+              </p>
+              <div class="event-meta">
+                <div class="event-meta-item">
+                  <span class="event-meta-icon" aria-hidden="true">📍</span>
+                  <span>Innovation & Incubation Hub</span>
+                </div>
+                <div class="event-meta-item">
+                  <span class="event-meta-icon" aria-hidden="true">⏰</span>
+                  <span>10:00 AM – 05:00 PM</span>
+                </div>
+              </div>
+              <div class="event-actions">
+                <button class="btn btn-secondary btn-sm btn-demo-action" type="button" style="width: 100%;">View Event Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 3: Campus Cultural Fest -->
+          <div class="event-card">
+            <div class="event-header">
+              <div class="event-date-box">
+                <div class="event-day">22</div>
+                <div class="event-month">NOV</div>
+              </div>
+              <span class="event-demo-tag">Sample Event</span>
+            </div>
+            <div class="event-body">
+              <span class="event-category">Cultural & Arts</span>
+              <h3 class="event-title">Campus Cultural & Arts Festival</h3>
+              <p class="event-description">
+                Celebrating collegiate arts, music, dance theatre, and creative design with inter-department competitions and guest concerts.
+              </p>
+              <div class="event-meta">
+                <div class="event-meta-item">
+                  <span class="event-meta-icon" aria-hidden="true">📍</span>
+                  <span>Open Air Amphitheatre</span>
+                </div>
+                <div class="event-meta-item">
+                  <span class="event-meta-icon" aria-hidden="true">⏰</span>
+                  <span>04:00 PM – 10:00 PM</span>
+                </div>
+              </div>
+              <div class="event-actions">
+                <button class="btn btn-secondary btn-sm btn-demo-action" type="button" style="width: 100%;">View Event Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         7. Call to Action (CTA) Section
+         ========================================================================= -->
+    <section class="cta-section" id="about">
+      <div class="container">
+        <div class="cta-box">
+          <span class="cta-tag">Unified Institutional Experience</span>
+          <h2 class="cta-title">Bring Your Campus Together.</h2>
+          <p class="cta-description">
+            One platform for students, faculty and administrators. Experience streamlined academic operations and connected digital workflows with CampusOS.
+          </p>
+          <div class="cta-actions">
+            <a href="#features" class="btn btn-primary btn-lg">Explore CampusOS</a>
+            <a href="pages/login.html" class="btn btn-secondary btn-lg">Sign In to Portal</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       8. Footer Refinement
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Footer Col 1: Brand & Description -->
+        <div class="footer-brand">
+          <a href="index.html" class="brand">
+            <span class="brand-icon" aria-hidden="true">C</span>
+            <span>CampusOS</span>
+          </a>
+          <p class="footer-text">
+            A modern, unified digital operating system for collegiate institutions. Engineered to synchronize academic management, attendance, and campus life.
+          </p>
+          <span class="footer-phase-tag">Phase 2: Landing Page Refinement</span>
+        </div>
+
+        <!-- Footer Col 2: Platform Navigation -->
+        <div>
+          <h4 class="footer-title">Platform</h4>
+          <ul class="footer-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#stats">Campus Impact</a></li>
+            <li><a href="#features">Features & Modules</a></li>
+            <li><a href="#departments">Academic Departments</a></li>
+            <li><a href="#events">Upcoming Events</a></li>
+          </ul>
+        </div>
+
+        <!-- Footer Col 3: Portal Access & Resources -->
+        <div>
+          <h4 class="footer-title">Portals & Access</h4>
+          <ul class="footer-links">
+            <li><a href="pages/login.html">Sign In</a></li>
+            <li><a href="pages/student-dashboard.html">Student Portal</a></li>
+            <li><a href="pages/faculty-dashboard.html">Faculty Portal</a></li>
+            <li><a href="pages/admin-dashboard.html">Administrator Console</a></li>
+          </ul>
+        </div>
+
+        <!-- Footer Col 4: Campus Contact Placeholder -->
+        <div>
+          <h4 class="footer-title">Contact & Support</h4>
+          <div class="footer-contact-item">
+            <span class="icon" aria-hidden="true">📍</span>
+            <span>University Tech Park, Knowledge Avenue, Academic District</span>
+          </div>
+          <div class="footer-contact-item">
+            <span class="icon" aria-hidden="true">✉️</span>
+            <span>support@campusos.edu</span>
+          </div>
+          <div class="footer-contact-item">
+            <span class="icon" aria-hidden="true">📞</span>
+            <span>+1 (800) 555-CAMPUS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom Bar -->
+      <div class="footer-bottom">
+        <div>
+          &copy; <span id="current-year">2026</span> CampusOS. All rights reserved.
+        </div>
+        <div>
+          HTML5 • CSS3 • Vanilla JavaScript • Clean SaaS Platform
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Client Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

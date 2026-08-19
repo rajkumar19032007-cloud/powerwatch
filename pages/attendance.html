@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CampusOS Attendance Portal — Academic Session Attendance Tracking">
+  <title>Attendance Tracking — CampusOS</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/attendance.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-brand-wrapper">
+        <a href="../index.html" class="brand">
+          <span class="brand-icon" style="background: linear-gradient(135deg, #059669, #4f46e5);" aria-hidden="true">C</span>
+          <span>CampusOS</span>
+        </a>
+        <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">✕</button>
+      </div>
+
+      <div class="sidebar-user-preview">
+        <div class="user-preview-avatar" style="background: linear-gradient(135deg, #059669, #4f46e5);" aria-hidden="true" id="user-avatar-initials">CO</div>
+        <div class="user-preview-info">
+          <div class="user-preview-name" id="sidebar-user-name">User Account</div>
+          <div class="user-preview-role" id="sidebar-user-role">Academic Portal</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-nav-group-title">Portals & Academics</div>
+        <a href="#" id="nav-dashboard-link" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">📊</span>
+          <span>My Dashboard</span>
+        </a>
+        <a href="attendance.html" class="sidebar-nav-item active" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">✅</span>
+          <span>Attendance</span>
+        </a>
+        <a href="assignments.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">📝</span>
+          <span>Assignments</span>
+        </a>
+        <a href="marks.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">📈</span>
+          <span>Marks & Grades</span>
+        </a>
+
+        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-slate-200);">
+          <a href="#" class="sidebar-nav-item logout-btn" style="color: #dc2626;">
+            <span class="nav-icon" aria-hidden="true">🚪</span>
+            <span>Sign Out</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="dashboard-main-wrapper">
+      <header class="dashboard-header">
+        <div class="dashboard-header-left">
+          <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="Open navigation menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="greeting-box">
+            <h1 class="user-greeting-title" id="page-title">Attendance Tracking ✅</h1>
+            <p class="user-greeting-sub" id="page-subtitle">Track lecture sessions, attendance percentage, and compliance.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-header-right">
+          <div class="date-pill" id="current-date-pill">📅 Loading...</div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Metric Cards -->
+        <div class="attendance-metric-grid" id="attendance-metrics-container">
+          <div class="attendance-stat-box">
+            <div>
+              <div class="attendance-stat-lbl">Aggregate Attendance</div>
+              <div class="attendance-stat-val" id="metric-overall-att">--%</div>
+            </div>
+            <div class="stat-metric-icon icon-emerald">✅</div>
+          </div>
+          <div class="attendance-stat-box">
+            <div>
+              <div class="attendance-stat-lbl">Total Sessions</div>
+              <div class="attendance-stat-val" id="metric-total-sessions">--</div>
+            </div>
+            <div class="stat-metric-icon icon-blue">📚</div>
+          </div>
+          <div class="attendance-stat-box">
+            <div>
+              <div class="attendance-stat-lbl">Sessions Attended</div>
+              <div class="attendance-stat-val" id="metric-attended-sessions" style="color: var(--color-success);">--</div>
+            </div>
+            <div class="stat-metric-icon icon-purple">🎓</div>
+          </div>
+        </div>
+
+        <!-- Attendance Roster / Course List -->
+        <div class="attendance-table-container" id="attendance-content-container">
+          <div style="text-align: center; padding: 3rem; color: var(--color-slate-500);">
+            Loading attendance records from MySQL...
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Client Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/attendance.js"></script>
+</body>
+</html>

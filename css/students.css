@@ -1,0 +1,265 @@
+/**
+ * CampusOS — Student Management Stylesheet (css/students.css)
+ * Phase 11: Real Student Management for Administrators
+ */
+
+/* =============================================================================
+   1. Action Bar & Filters
+   ============================================================================= */
+.students-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.students-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 280px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-slate-400);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 2.4rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-slate-300);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-slate-900);
+  transition: var(--transition-normal);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.filter-select {
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-slate-300);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-slate-800);
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.students-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* =============================================================================
+   2. Students Table
+   ============================================================================= */
+.table-responsive-container {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-slate-200);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.students-table th {
+  background: var(--color-slate-50);
+  padding: 0.85rem 1.25rem;
+  font-weight: 600;
+  color: var(--color-slate-700);
+  border-bottom: 1px solid var(--color-slate-200);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.students-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-slate-100);
+  vertical-align: middle;
+  color: var(--color-slate-800);
+}
+
+.students-table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.students-table tbody tr:hover {
+  background-color: var(--color-slate-50);
+}
+
+.student-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.student-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), #6366f1);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.student-name-title {
+  font-weight: 600;
+  color: var(--color-slate-900);
+  display: block;
+}
+
+.student-id-subtext {
+  font-size: 0.75rem;
+  color: var(--color-slate-500);
+}
+
+.action-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-action-icon {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-slate-200);
+  background: var(--color-surface);
+  color: var(--color-slate-700);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn-action-icon:hover {
+  background: var(--color-slate-100);
+  border-color: var(--color-slate-300);
+}
+
+.btn-action-edit:hover {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.btn-action-delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+/* =============================================================================
+   3. Loading, Empty & Error States
+   ============================================================================= */
+.table-state-box {
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.state-icon {
+  font-size: 2.25rem;
+}
+
+.state-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-slate-800);
+}
+
+.state-subtext {
+  font-size: 0.875rem;
+  color: var(--color-slate-500);
+  max-width: 400px;
+}
+
+/* =============================================================================
+   4. Modal Enhancements
+   ============================================================================= */
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-slate-100);
+  font-size: 0.875rem;
+}
+
+.modal-detail-row:last-child {
+  border-bottom: none;
+}
+
+.modal-detail-label {
+  color: var(--color-slate-500);
+  font-weight: 500;
+}
+
+.modal-detail-value {
+  color: var(--color-slate-900);
+  font-weight: 600;
+}

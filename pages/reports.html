@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CampusOS Institutional Reporting & Academic Analytics">
+  <title>Institutional Analytics & Reports — CampusOS</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/admin-dashboard.css">
+  <link rel="stylesheet" href="../css/reports.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Administrator Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="app-sidebar" aria-label="Administrator Navigation">
+      <div class="sidebar-brand-wrapper">
+        <a href="../index.html" class="brand">
+          <span class="brand-icon" style="background: linear-gradient(135deg, #f59e0b, #4f46e5);" aria-hidden="true">C</span>
+          <span>CampusOS</span>
+        </a>
+        <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close menu">✕</button>
+      </div>
+
+      <div class="sidebar-user-preview">
+        <div class="user-preview-avatar" style="background: linear-gradient(135deg, #f59e0b, #4f46e5);" aria-hidden="true">CA</div>
+        <div class="user-preview-info">
+          <div class="user-preview-name" id="sidebar-admin-name">Administrator</div>
+          <div class="user-preview-role">Institutional Console</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-nav-group-title">Institutional Management</div>
+        <a href="admin-dashboard.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">📊</span>
+          <span>Overview</span>
+        </a>
+        <a href="students.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">🎓</span>
+          <span>Students</span>
+        </a>
+        <a href="attendance.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">✅</span>
+          <span>Attendance</span>
+        </a>
+        <a href="assignments.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">📝</span>
+          <span>Assignments</span>
+        </a>
+        <a href="marks.html" class="sidebar-nav-item">
+          <span class="nav-icon" aria-hidden="true">📈</span>
+          <span>Marks</span>
+        </a>
+        <a href="reports.html" class="sidebar-nav-item active" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">📑</span>
+          <span>Reports & Analytics</span>
+        </a>
+
+        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-slate-200);">
+          <a href="#" class="sidebar-nav-item logout-btn" style="color: #dc2626;">
+            <span class="nav-icon" aria-hidden="true">🚪</span>
+            <span>Sign Out</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="dashboard-main-wrapper">
+      <header class="dashboard-header">
+        <div class="dashboard-header-left">
+          <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="Open navigation menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="greeting-box">
+            <h1 class="user-greeting-title" id="page-title">Institutional Analytics & Reports 📑</h1>
+            <p class="user-greeting-sub" id="page-subtitle">Real-time academic performance, attendance compliance, and assignment analytics.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-header-right">
+          <button class="btn btn-secondary btn-sm" id="btn-export-csv" type="button">
+            📥 Export CSV
+          </button>
+          <button class="btn btn-primary btn-sm" id="btn-print-report" type="button">
+            🖨️ Print Report
+          </button>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- 1. Report Filters Toolbar -->
+        <div class="reports-filter-toolbar">
+          <div class="filter-inputs-row">
+            <select class="report-filter-select" id="filter-dept-select" aria-label="Filter Department">
+              <option value="all">All Departments</option>
+            </select>
+
+            <select class="report-filter-select" id="filter-course-select" aria-label="Filter Course">
+              <option value="all">All Courses</option>
+            </select>
+
+            <input type="date" class="report-date-input" id="filter-start-date" aria-label="Start Date" title="Start Date">
+            <input type="date" class="report-date-input" id="filter-end-date" aria-label="End Date" title="End Date">
+          </div>
+
+          <div class="filter-btns-row">
+            <button class="btn btn-primary btn-sm" id="btn-apply-filters" type="button">
+              Apply Filters
+            </button>
+            <button class="btn btn-secondary btn-sm" id="btn-reset-filters" type="button">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Overview Metric Cards -->
+        <div class="reports-stats-grid">
+          <div class="report-stat-card">
+            <span class="report-stat-label">Total Students</span>
+            <span class="report-stat-value" id="stat-total-students">--</span>
+            <span class="report-stat-sub">Enrolled Scholars</span>
+          </div>
+
+          <div class="report-stat-card">
+            <span class="report-stat-label">Total Faculty</span>
+            <span class="report-stat-value" id="stat-total-faculty">--</span>
+            <span class="report-stat-sub">Instructors & Mentors</span>
+          </div>
+
+          <div class="report-stat-card">
+            <span class="report-stat-label">Attendance Rate</span>
+            <span class="report-stat-value" id="stat-attendance-rate" style="color: var(--color-success);">--%</span>
+            <span class="report-stat-sub">Institutional Average</span>
+          </div>
+
+          <div class="report-stat-card">
+            <span class="report-stat-label">Assignment Completion</span>
+            <span class="report-stat-value" id="stat-assignment-rate" style="color: var(--color-primary);">--%</span>
+            <span class="report-stat-sub">Submissions vs Enrolled</span>
+          </div>
+
+          <div class="report-stat-card">
+            <span class="report-stat-label">Academic Performance</span>
+            <span class="report-stat-value" id="stat-performance-rate" style="color: #d97706;">--%</span>
+            <span class="report-stat-sub">Overall Marks Average</span>
+          </div>
+        </div>
+
+        <!-- 3. Visual Charts Grid (Chart.js) -->
+        <div class="reports-charts-grid">
+          <!-- Chart 1: Student Distribution -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <span class="chart-panel-title">👥 Student Distribution by Department</span>
+              <span class="badge badge-primary">Demographics</span>
+            </div>
+            <div class="chart-canvas-container">
+              <canvas id="chart-student-dist"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Department Attendance -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <span class="chart-panel-title">✅ Department Attendance Rate (%)</span>
+              <span class="badge badge-success">Compliance</span>
+            </div>
+            <div class="chart-canvas-container">
+              <canvas id="chart-attendance"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Academic Marks Performance -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <span class="chart-panel-title">📈 Course Academic Performance Average (%)</span>
+              <span class="badge badge-warning">Grades</span>
+            </div>
+            <div class="chart-canvas-container">
+              <canvas id="chart-performance"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: Assignment Pipeline -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <span class="chart-panel-title">📝 Assignment Submission Breakdown</span>
+              <span class="badge badge-neutral">Pipeline</span>
+            </div>
+            <div class="chart-canvas-container">
+              <canvas id="chart-assignments"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Student Performance Leaderboard Table -->
+        <section class="dashboard-panel" style="margin-top: 2rem;">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <span>🏆</span> Student Academic Standing & Performance Roster
+            </h2>
+            <span class="badge badge-neutral" id="leaderboard-count-pill">Loading...</span>
+          </div>
+
+          <div class="report-table-wrapper" style="margin-top: 1rem;">
+            <table class="report-table" aria-label="Student Academic Standing">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Department</th>
+                  <th>Attendance %</th>
+                  <th>Average Marks</th>
+                  <th>Assignment Submissions</th>
+                  <th>Academic Standing</th>
+                </tr>
+              </thead>
+              <tbody id="reports-students-tbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 2rem; color: var(--color-slate-500);">
+                    Loading student performance metrics from MySQL...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Logout Modal -->
+  <div class="modal-overlay" id="logout-modal" role="dialog" aria-modal="true" aria-labelledby="modal-logout-title">
+    <div class="modal-box">
+      <h3 class="modal-title" id="modal-logout-title">Sign Out of Admin Console?</h3>
+      <p class="modal-desc">Signing out will end your administrator session.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary modal-close-btn" type="button">Cancel</button>
+        <button class="btn btn-primary" id="btn-confirm-logout" type="button">Confirm Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/reports.js"></script>
+</body>
+</html>

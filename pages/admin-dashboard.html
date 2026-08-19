@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CampusOS Admin Dashboard — Central institutional overview for students, faculty, departments, courses, and platform activity.">
+  <title>Admin Dashboard — CampusOS</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/faculty-dashboard.css">
+  <link rel="stylesheet" href="../css/admin-dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Backdrop for Mobile Sidebar -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+  <!-- =========================================================================
+       Application Shell Layout
+       ========================================================================= -->
+  <div class="app-layout">
+
+    <!-- =======================================================================
+         1. Sidebar Navigation
+         ======================================================================= -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Admin Console Sidebar">
+      <div>
+        <!-- Sidebar Brand Header -->
+        <div class="sidebar-header">
+          <a href="../index.html" class="brand">
+            <span class="brand-icon" aria-hidden="true">C</span>
+            <span>CampusOS</span>
+          </a>
+          <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close sidebar navigation" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Institutional Admin</div>
+          <a href="admin-dashboard.html" class="sidebar-nav-item active" aria-current="page">
+            <span class="sidebar-nav-icon" aria-hidden="true">📊</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="students.html" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">👥</span>
+            <span>Students</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">🎓</span>
+            <span>Faculty</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">🏛️</span>
+            <span>Departments</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">📚</span>
+            <span>Courses</span>
+          </a>
+          <a href="attendance.html" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">✅</span>
+            <span>Attendance</span>
+          </a>
+          <a href="marks.html" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">📈</span>
+            <span>Academics & Marks</span>
+          </a>
+
+          <div class="nav-section-title">Operations & Logs</div>
+          <a href="#" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">📢</span>
+            <span>Announcements</span>
+          </a>
+          <a href="#" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">🎉</span>
+            <span>Events</span>
+          </a>
+          <a href="reports.html" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" aria-hidden="true">📑</span>
+            <span>Reports & Analytics</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Sidebar Bottom Actions -->
+      <div class="sidebar-footer">
+        <a href="#" class="sidebar-nav-item">
+          <span class="sidebar-nav-icon" aria-hidden="true">⚙️</span>
+          <span>Settings</span>
+        </a>
+        <a href="#" class="sidebar-nav-item logout-btn">
+          <span class="sidebar-nav-icon" aria-hidden="true">🚪</span>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- =======================================================================
+         2. Main Application Area
+         ======================================================================= -->
+    <div class="app-main-wrapper">
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="Open sidebar menu" aria-expanded="false" type="button">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="search-wrapper">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input class="search-input" type="search" placeholder="Search departments, users, courses..." aria-label="Search admin console">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Notification Button -->
+          <button class="btn-icon" aria-label="View system alerts (5 unread)" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-badge-dot" style="background-color: var(--color-warning);" aria-hidden="true"></span>
+          </button>
+
+          <!-- Admin Identity Chip (Demo Data) -->
+          <div class="user-profile-chip" aria-label="Logged in as Campus Administrator">
+            <div class="user-avatar" style="background: linear-gradient(135deg, #f59e0b, #4f46e5);" aria-hidden="true">CA</div>
+            <div class="user-chip-info">
+              <span class="user-chip-name">Campus Administrator</span>
+              <span class="user-chip-role">Super Admin • Console</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Content -->
+      <main class="app-content">
+        <!-- Welcome Hero Banner -->
+        <section class="welcome-banner" aria-label="Administrator Welcome">
+          <div>
+            <span class="badge badge-warning" style="margin-bottom: 0.6rem; background: rgba(245, 158, 11, 0.35); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+              Central Administration • CampusOS Demo College
+            </span>
+            <h1 class="welcome-title" id="dynamic-greeting">Welcome back, Administrator 👋</h1>
+            <p class="welcome-subtitle">Here's an overview of your campus platform.</p>
+          </div>
+          <div class="welcome-date-pill" id="current-date-pill">
+            📅 Loading date...
+          </div>
+        </section>
+
+        <!-- 3. Key Primary Statistics (4 Cards) -->
+        <section class="dashboard-stats-grid" aria-label="Campus Macro Metrics">
+          <!-- Stat 1: Total Students -->
+          <div class="stat-metric-card">
+            <div class="stat-metric-info">
+              <span class="stat-metric-label">Total Students</span>
+              <span class="stat-metric-value">5,240</span>
+              <span class="stat-metric-sub"><strong style="color: var(--color-success);">+8.4%</strong> YoY enrollment</span>
+            </div>
+            <div class="stat-metric-icon icon-blue" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Stat 2: Faculty Members -->
+          <div class="stat-metric-card">
+            <div class="stat-metric-info">
+              <span class="stat-metric-label">Faculty Members</span>
+              <span class="stat-metric-value">286</span>
+              <span class="stat-metric-sub">Across 12 departments</span>
+            </div>
+            <div class="stat-metric-icon icon-emerald" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Stat 3: Departments -->
+          <div class="stat-metric-card">
+            <div class="stat-metric-info">
+              <span class="stat-metric-label">Departments</span>
+              <span class="stat-metric-value">12</span>
+              <span class="stat-metric-sub">Engineering & Applied Sciences</span>
+            </div>
+            <div class="stat-metric-icon icon-purple" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Stat 4: Active Courses -->
+          <div class="stat-metric-card">
+            <div class="stat-metric-info">
+              <span class="stat-metric-label">Active Courses</span>
+              <span class="stat-metric-value">96</span>
+              <span class="stat-metric-sub">Autumn 2026 Academic Term</span>
+            </div>
+            <div class="stat-metric-icon icon-amber" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Main 2-Column Dashboard Grid -->
+        <div class="dashboard-grid-layout">
+          <!-- LEFT COLUMN: Distribution, Departments Table, Attendance & Performance -->
+          <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+
+            <!-- Student & Faculty Distribution -->
+            <section class="dashboard-panel" aria-label="Institutional Enrollment Distribution">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>📊</span> Student & Faculty Distribution
+                </h2>
+                <span class="badge badge-primary">5,240 Students • 286 Faculty</span>
+              </div>
+
+              <div class="distribution-list">
+                <!-- Program 1 -->
+                <div class="distribution-item">
+                  <div class="dist-header-row">
+                    <span>Computer Science & Engineering</span>
+                    <span><strong>1,240 Students</strong> (62 Faculty)</span>
+                  </div>
+                  <div class="dist-progress-bg" aria-hidden="true">
+                    <div class="dist-progress-fill fill-blue" style="width: 23.7%;"></div>
+                  </div>
+                </div>
+
+                <!-- Program 2 -->
+                <div class="distribution-item">
+                  <div class="dist-header-row">
+                    <span>Information Technology</span>
+                    <span><strong>980 Students</strong> (51 Faculty)</span>
+                  </div>
+                  <div class="dist-progress-bg" aria-hidden="true">
+                    <div class="dist-progress-fill fill-emerald" style="width: 18.7%;"></div>
+                  </div>
+                </div>
+
+                <!-- Program 3 -->
+                <div class="distribution-item">
+                  <div class="dist-header-row">
+                    <span>Electronics & Communication (ECE)</span>
+                    <span><strong>860 Students</strong> (48 Faculty)</span>
+                  </div>
+                  <div class="dist-progress-bg" aria-hidden="true">
+                    <div class="dist-progress-fill fill-blue" style="width: 16.4%;"></div>
+                  </div>
+                </div>
+
+                <!-- Program 4 -->
+                <div class="distribution-item">
+                  <div class="dist-header-row">
+                    <span>Mechanical Engineering</span>
+                    <span><strong>720 Students</strong> (42 Faculty)</span>
+                  </div>
+                  <div class="dist-progress-bg" aria-hidden="true">
+                    <div class="dist-progress-fill fill-amber" style="width: 13.7%;"></div>
+                  </div>
+                </div>
+
+                <!-- Program 5 -->
+                <div class="distribution-item">
+                  <div class="dist-header-row">
+                    <span>Civil Engineering</span>
+                    <span><strong>640 Students</strong> (38 Faculty)</span>
+                  </div>
+                  <div class="dist-progress-bg" aria-hidden="true">
+                    <div class="dist-progress-fill fill-amber" style="width: 12.2%;"></div>
+                  </div>
+                </div>
+
+                <!-- Program 6 -->
+                <div class="distribution-item">
+                  <div class="dist-header-row">
+                    <span>Other Specialized Programs</span>
+                    <span><strong>800 Students</strong> (45 Faculty)</span>
+                  </div>
+                  <div class="dist-progress-bg" aria-hidden="true">
+                    <div class="dist-progress-fill" style="width: 15.3%; background: #94a3b8;"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Department Management Preview Table -->
+            <section class="dashboard-panel" aria-label="Department Management">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>🏛️</span> Academic Departments
+                </h2>
+                <button class="btn btn-outline-primary btn-sm btn-admin-manage" data-manage="Department" type="button">
+                  Manage Departments
+                </button>
+              </div>
+
+              <div class="table-responsive-wrapper">
+                <table class="student-table" aria-label="Departments Table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Department</th>
+                      <th scope="col">Head of Department</th>
+                      <th scope="col">Students</th>
+                      <th scope="col">Faculty</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Computer Science & Engineering</strong></td>
+                      <td>Dr. Sarah Williams</td>
+                      <td>1,240</td>
+                      <td>62</td>
+                      <td><span class="badge status-excellent">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Information Technology</strong></td>
+                      <td>Dr. Michael Brown</td>
+                      <td>980</td>
+                      <td>51</td>
+                      <td><span class="badge status-excellent">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Electronics & Communication</strong></td>
+                      <td>Dr. Emily Davis</td>
+                      <td>860</td>
+                      <td>48</td>
+                      <td><span class="badge status-excellent">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Mechanical Engineering</strong></td>
+                      <td>Dr. James Miller</td>
+                      <td>720</td>
+                      <td>42</td>
+                      <td><span class="badge status-excellent">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Civil Engineering</strong></td>
+                      <td>Dr. Robert Chen</td>
+                      <td>640</td>
+                      <td>38</td>
+                      <td><span class="badge status-excellent">Active</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Attendance Analytics by Department -->
+            <section class="dashboard-panel" aria-label="Campus Attendance Analytics">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>✅</span> Campus Attendance Analytics
+                </h2>
+                <button class="btn btn-secondary btn-sm btn-admin-manage" data-manage="Attendance Report" type="button">
+                  View Attendance Report
+                </button>
+              </div>
+
+              <div class="attendance-overview-box">
+                <div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Overall Institutional Attendance</div>
+                  <div class="attendance-total-val">91%</div>
+                </div>
+                <div>
+                  <span class="badge badge-success">Target >85% Met</span>
+                </div>
+              </div>
+
+              <div class="subject-attendance-list">
+                <div class="subject-attendance-item">
+                  <div class="subject-info-row">
+                    <span>Computer Science & Engineering</span>
+                    <span style="color: var(--color-success); font-weight: 700;">93%</span>
+                  </div>
+                  <div class="subject-progress-bg" aria-hidden="true">
+                    <div class="subject-progress-fill fill-emerald" style="width: 93%;"></div>
+                  </div>
+                </div>
+
+                <div class="subject-attendance-item">
+                  <div class="subject-info-row">
+                    <span>Information Technology</span>
+                    <span style="color: var(--color-primary); font-weight: 700;">90%</span>
+                  </div>
+                  <div class="subject-progress-bg" aria-hidden="true">
+                    <div class="subject-progress-fill fill-blue" style="width: 90%;"></div>
+                  </div>
+                </div>
+
+                <div class="subject-attendance-item">
+                  <div class="subject-info-row">
+                    <span>Electronics & Communication</span>
+                    <span style="color: var(--color-success); font-weight: 700;">92%</span>
+                  </div>
+                  <div class="subject-progress-bg" aria-hidden="true">
+                    <div class="subject-progress-fill fill-emerald" style="width: 92%;"></div>
+                  </div>
+                </div>
+
+                <div class="subject-attendance-item">
+                  <div class="subject-info-row">
+                    <span>Mechanical Engineering</span>
+                    <span style="color: var(--color-warning); font-weight: 700;">88%</span>
+                  </div>
+                  <div class="subject-progress-bg" aria-hidden="true">
+                    <div class="subject-progress-fill fill-amber" style="width: 88%;"></div>
+                  </div>
+                </div>
+
+                <div class="subject-attendance-item">
+                  <div class="subject-info-row">
+                    <span>Civil Engineering</span>
+                    <span style="color: var(--color-primary); font-weight: 700;">91%</span>
+                  </div>
+                  <div class="subject-progress-bg" aria-hidden="true">
+                    <div class="subject-progress-fill fill-blue" style="width: 91%;"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Academic Performance Overview Chart -->
+            <section class="dashboard-panel" aria-label="Department Academic Averages">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>📈</span> Average Performance by Department
+                </h2>
+                <span class="badge badge-neutral">GPA Aggregate</span>
+              </div>
+
+              <div class="performance-chart-wrapper">
+                <div class="performance-chart-grid" aria-hidden="true">
+                  <!-- Bar 1 -->
+                  <div class="perf-bar-col">
+                    <div class="perf-bar-fill" style="height: 86%;">
+                      <span class="perf-bar-score">86%</span>
+                    </div>
+                    <span class="perf-bar-label" title="Computer Science">CSE</span>
+                  </div>
+
+                  <!-- Bar 2 -->
+                  <div class="perf-bar-col">
+                    <div class="perf-bar-fill" style="height: 82%;">
+                      <span class="perf-bar-score">82%</span>
+                    </div>
+                    <span class="perf-bar-label" title="Information Technology">IT</span>
+                  </div>
+
+                  <!-- Bar 3 -->
+                  <div class="perf-bar-col">
+                    <div class="perf-bar-fill" style="height: 84%;">
+                      <span class="perf-bar-score">84%</span>
+                    </div>
+                    <span class="perf-bar-label" title="Electronics & Communication">ECE</span>
+                  </div>
+
+                  <!-- Bar 4 -->
+                  <div class="perf-bar-col">
+                    <div class="perf-bar-fill" style="height: 79%;">
+                      <span class="perf-bar-score">79%</span>
+                    </div>
+                    <span class="perf-bar-label" title="Mechanical Engineering">Mech</span>
+                  </div>
+
+                  <!-- Bar 5 -->
+                  <div class="perf-bar-col">
+                    <div class="perf-bar-fill" style="height: 81%;">
+                      <span class="perf-bar-score">81%</span>
+                    </div>
+                    <span class="perf-bar-label" title="Civil Engineering">Civil</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Announcements Management Queue -->
+            <section class="dashboard-panel" aria-label="Campus Announcements Console">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>📢</span> Campus Broadcasts
+                </h2>
+                <button class="btn btn-primary btn-sm btn-admin-manage" data-manage="Announcement Broadcast" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" type="button">
+                  + Create Announcement
+                </button>
+              </div>
+
+              <div class="assignments-list">
+                <!-- Announcement 1 -->
+                <div class="faculty-assignment-card">
+                  <div class="assignment-info">
+                    <span class="assignment-title">Internal Assessment Schedule Released</span>
+                    <span class="assignment-meta">Audience: All Students • Aug 18, 2026</span>
+                  </div>
+                  <span class="badge status-excellent">Published</span>
+                </div>
+
+                <!-- Announcement 2 -->
+                <div class="faculty-assignment-card">
+                  <div class="assignment-info">
+                    <span class="assignment-title">Campus Innovation Hackathon 2026</span>
+                    <span class="assignment-meta">Audience: Students & Faculty • Aug 17, 2026</span>
+                  </div>
+                  <span class="badge status-excellent">Published</span>
+                </div>
+
+                <!-- Announcement 3 -->
+                <div class="faculty-assignment-card">
+                  <div class="assignment-info">
+                    <span class="assignment-title">Annual Faculty Curriculum Review Meeting</span>
+                    <span class="assignment-meta">Audience: Faculty Only • Aug 16, 2026</span>
+                  </div>
+                  <span class="badge status-excellent">Published</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- RIGHT COLUMN: Profile, System Status, User Management, Activity Feed, Events & Actions -->
+          <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+
+            <!-- Admin Profile Card -->
+            <section class="profile-card-widget" aria-label="Administrator Profile Summary">
+              <div class="profile-widget-avatar" style="background: linear-gradient(135deg, #f59e0b, #4f46e5);" aria-hidden="true">CA</div>
+              <h3 class="profile-widget-name">Campus Administrator</h3>
+              <div class="profile-widget-dept">CampusOS Demo College</div>
+              <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                <span class="badge badge-neutral">ID: ADMIN-DEMO-001</span>
+                <span class="badge badge-warning">Super Admin</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-slate-500);">admin@campusos.edu</div>
+            </section>
+
+            <!-- System Infrastructure Health Status Card -->
+            <section class="dashboard-panel" aria-label="System Status">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>⚙️</span> System Infrastructure
+                </h2>
+                <span class="badge badge-primary">Phase 6 Status</span>
+              </div>
+
+              <div class="system-status-grid">
+                <div class="system-status-node">
+                  <span class="status-node-label">Frontend</span>
+                  <span class="badge badge-success">Operational</span>
+                </div>
+                <div class="system-status-node">
+                  <span class="status-node-label">Authentication</span>
+                  <span class="badge badge-warning">Demo Mode</span>
+                </div>
+                <div class="system-status-node">
+                  <span class="status-node-label">Database</span>
+                  <span class="badge badge-neutral" id="status-badge-db">Checking...</span>
+                </div>
+                <div class="system-status-node">
+                  <span class="status-node-label">REST APIs</span>
+                  <span class="badge badge-neutral" id="status-badge-api">Checking...</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- User Management Overview -->
+            <section class="dashboard-panel" aria-label="User Account Management">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>👥</span> User Management
+                </h2>
+              </div>
+
+              <div class="user-metric-pills">
+                <div class="user-metric-box">
+                  <div class="user-metric-num" id="admin-metric-students">5,240</div>
+                  <div class="user-metric-tag">Total Students</div>
+                </div>
+                <div class="user-metric-box">
+                  <div class="user-metric-num" id="admin-metric-faculty">286</div>
+                  <div class="user-metric-tag">Total Faculty</div>
+                </div>
+                <div class="user-metric-box">
+                  <div class="user-metric-num" id="admin-metric-admins" style="color: var(--color-primary);">3</div>
+                  <div class="user-metric-tag">Administrators</div>
+                </div>
+                <div class="user-metric-box">
+                  <div class="user-metric-num" id="admin-metric-total" style="color: var(--color-success);">5,529</div>
+                  <div class="user-metric-tag">Total Records</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.6rem;">
+                <a href="students.html" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">
+                  Manage Students
+                </a>
+                <button class="btn btn-secondary btn-sm btn-admin-manage" data-manage="Faculty User Accounts" style="flex: 1;" type="button">
+                  Manage Faculty
+                </button>
+              </div>
+            </section>
+
+            <!-- System Activity Feed -->
+            <section class="dashboard-panel" aria-label="Real-time Activity Log">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>⚡</span> Recent Activity
+                </h2>
+                <span class="badge badge-neutral">Live Feed</span>
+              </div>
+
+              <div class="activity-feed-list">
+                <div class="activity-feed-item">
+                  <div class="activity-feed-icon">👤</div>
+                  <div class="activity-feed-details">
+                    <span class="activity-feed-title">New student registered (Alex Johnson)</span>
+                    <span class="activity-feed-time">2 minutes ago • CSE Department</span>
+                  </div>
+                </div>
+
+                <div class="activity-feed-item">
+                  <div class="activity-feed-icon">🎓</div>
+                  <div class="activity-feed-details">
+                    <span class="activity-feed-title">Faculty profile updated (Dr. Sarah Williams)</span>
+                    <span class="activity-feed-time">15 minutes ago • HOD CSE</span>
+                  </div>
+                </div>
+
+                <div class="activity-feed-item">
+                  <div class="activity-feed-icon">📚</div>
+                  <div class="activity-feed-details">
+                    <span class="activity-feed-title">New elective course added (AI & Robotics CS608)</span>
+                    <span class="activity-feed-time">32 minutes ago • Academic Office</span>
+                  </div>
+                </div>
+
+                <div class="activity-feed-item">
+                  <div class="activity-feed-icon">📝</div>
+                  <div class="activity-feed-details">
+                    <span class="activity-feed-title">Assignment published for Web Technologies</span>
+                    <span class="activity-feed-time">1 hour ago • 42 enrolled</span>
+                  </div>
+                </div>
+
+                <div class="activity-feed-item">
+                  <div class="activity-feed-icon">📢</div>
+                  <div class="activity-feed-details">
+                    <span class="activity-feed-title">Campus-wide notice posted by Academic Council</span>
+                    <span class="activity-feed-time">2 hours ago • All Users</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Upcoming Campus Events -->
+            <section class="dashboard-panel" aria-label="Campus Events Management">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>🎉</span> Upcoming Events
+                </h2>
+                <button class="btn btn-outline-primary btn-sm btn-admin-manage" data-manage="Campus Events" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" type="button">
+                  Manage Events
+                </button>
+              </div>
+
+              <div class="announcements-list">
+                <div class="announcement-item">
+                  <div class="announcement-header">
+                    <span class="badge badge-primary" style="font-size: 0.65rem;">Aug 25, 2026</span>
+                    <span class="announcement-time">Innovation Block</span>
+                  </div>
+                  <p class="announcement-text">Campus Innovation Hackathon 2026</p>
+                </div>
+
+                <div class="announcement-item">
+                  <div class="announcement-header">
+                    <span class="badge badge-primary" style="font-size: 0.65rem;">Sep 02, 2026</span>
+                    <span class="announcement-time">Main Auditorium</span>
+                  </div>
+                  <p class="announcement-text">Annual Technical Symposium 2026</p>
+                </div>
+
+                <div class="announcement-item">
+                  <div class="announcement-header">
+                    <span class="badge badge-warning" style="font-size: 0.65rem;">Sep 12, 2026</span>
+                    <span class="announcement-time">Amphitheatre</span>
+                  </div>
+                  <p class="announcement-text">Campus Cultural & Arts Festival</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Quick Actions Panel -->
+            <section class="dashboard-panel" aria-label="Admin Quick Tools">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <span>🛠️</span> Quick Actions
+                </h2>
+              </div>
+
+              <div class="quick-actions-grid">
+                <a href="students.html" class="btn btn-primary btn-quick-action" style="text-align: center;">
+                  + Add Student
+                </a>
+                <button class="btn btn-secondary btn-quick-action" data-action="Add New Faculty Member" type="button">
+                  + Add Faculty
+                </button>
+                <button class="btn btn-secondary btn-quick-action" data-action="Create New Academic Department" type="button">
+                  🏛️ Add Department
+                </button>
+                <button class="btn btn-secondary btn-quick-action" data-action="Register New Course Curriculum" type="button">
+                  📚 Add Course
+                </button>
+                <button class="btn btn-secondary btn-quick-action" data-action="Generate Comprehensive Institutional Report" type="button">
+                  📑 Generate Report
+                </button>
+                <button class="btn btn-secondary btn-quick-action" data-action="Broadcast Institutional Announcement" type="button">
+                  📢 Post Notice
+                </button>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Demo Logout Confirmation Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="logout-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+    <div class="modal-box">
+      <h3 class="modal-title" id="modal-title">Sign Out of Admin Console?</h3>
+      <p class="modal-desc" id="modal-desc">
+        This is a demonstration administrator console. Signing out will return you to the main public landing page.
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-cancel-logout" type="button">Cancel</button>
+        <button class="btn btn-primary" id="btn-confirm-logout" type="button">Confirm Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>
