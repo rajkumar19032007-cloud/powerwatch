@@ -1,0 +1,30 @@
+{
+  "name": "campuslens-monorepo",
+  "version": "1.0.0",
+  "description": "CampusLens — Smart Web-Based AR Campus Navigation System",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "start": "npm start --prefix server",
+    "build": "npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "prisma:generate": "npm run prisma:generate --prefix server",
+    "prisma:push": "npm run prisma:push --prefix server",
+    "seed": "npm run seed --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "campus-navigation",
+    "augmented-reality",
+    "threejs",
+    "smart-campus",
+    "fullstack",
+    "pwa"
+  ],
+  "author": "CampusLens Team",
+  "license": "MIT"
+}

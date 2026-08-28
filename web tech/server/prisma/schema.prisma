@@ -1,0 +1,149 @@
+// Prisma schema for CampusLens Smart Campus AR Navigation System
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          String              @id @default(uuid())
+  name        String
+  email       String              @unique
+  password    String
+  role        String              @default("STUDENT") // STUDENT, STAFF, ADMIN
+  department  String?             @default("General")
+  avatar      String?             @default("avatar-cyan")
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  favorites   Favorite[]
+  history     NavigationHistory[]
+}
+
+model Building {
+  id          String        @id @default(uuid())
+  name        String
+  code        String        @unique
+  description String
+  category    String        @default("Academic")
+  lat         Float
+  lng         Float
+  altitude    Float         @default(0.0)
+  floors      Int           @default(3)
+  image       String?
+  color       String        @default("#00F0FF")
+  width       Float         @default(20.0)
+  depth       Float         @default(20.0)
+  height      Float         @default(15.0)
+  amenities   String?       @default("[]") // JSON string of amenities
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  rooms       Room[]
+  facilities  Facility[]
+  events      CampusEvent[]
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  roomNumber  String
+  name        String
+  buildingId  String
+  building    Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  floor       Int      @default(1)
+  department  String?  @default("General")
+  type        String   @default("CLASSROOM") // LECTURE_HALL, LAB, FACULTY_OFFICE, SEMINAR, CLASSROOM
+  capacity    Int      @default(60)
+  coordinates String?  @default("{}") // Local coordinates or JSON details
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Facility {
+  id                     String    @id @default(uuid())
+  name                   String
+  category               String    @default("Academic") // Academic, Labs, Library, Food, Medical, Sports, Parking, Administration, Hostels, Emergency
+  description            String
+  buildingId             String?
+  building               Building? @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  lat                    Float
+  lng                    Float
+  floor                  Int?      @default(1)
+  openingHours           String    @default("08:00 AM - 08:00 PM")
+  contactPhone           String?   @default("+1 (555) 019-2834")
+  isWheelchairAccessible Boolean   @default(true)
+  image                  String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+}
+
+model RouteNode {
+  id           String   @id @default(uuid())
+  nodeId       String   @unique
+  name         String
+  lat          Float
+  lng          Float
+  floor        Int      @default(1)
+  buildingId   String?
+  isIndoor     Boolean  @default(false)
+  isAccessible Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+model RouteEdge {
+  id           String  @id @default(uuid())
+  fromNodeId   String
+  toNodeId     String
+  distance     Float // in meters
+  isAccessible Boolean @default(true)
+  isStairs     Boolean @default(false)
+  isElevator   Boolean @default(false)
+  isOutdoor    Boolean @default(true)
+  description  String?
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType String // BUILDING, FACILITY, ROOM
+  targetId   String
+  title      String
+  subtitle   String?
+  icon       String?  @default("map-pin")
+  createdAt  DateTime @default(now())
+}
+
+model NavigationHistory {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originName      String
+  originLat       Float
+  originLng       Float
+  destName        String
+  destLat         Float
+  destLng         Float
+  distanceMeters  Float
+  durationSeconds Int
+  mode            String   @default("2D") // 2D, 3D, AR
+  createdAt       DateTime @default(now())
+}
+
+model CampusEvent {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  category    String    @default("Workshop") // Hackathon, Symposium, Workshop, Sports, Seminar
+  startDate   DateTime
+  endDate     DateTime
+  buildingId  String?
+  building    Building? @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  room        String?
+  organizer   String    @default("CampusLens Community")
+  bannerImage String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
