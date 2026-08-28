@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Devices & IoT Inventory — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+        </a>
+        <a href="buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item active">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="dashboard-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Smart Devices & Sub-Meters</span>
+              <span class="badge badge-cyan" id="deviceTotalCount">10 Devices</span>
+            </h1>
+            <p class="page-subtitle">Granular telemetry, remote power status, and sub-meter consumption tracking.</p>
+          </div>
+
+          <div class="page-actions">
+            <button class="btn btn-primary btn-sm" data-role="admin" onclick="PowerWatchUtils.openModal('addDeviceModal')">
+              <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Register Smart Meter
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters Bar -->
+        <div class="card" style="padding: 1rem 1.25rem;">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div class="input-with-icon" style="flex: 2; min-width: 240px;">
+              <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+              <input type="text" class="form-control" id="devSearchInput" placeholder="Search by device name, room, or circuit..." />
+            </div>
+
+            <select class="form-control form-select" id="devBuildingFilter" style="flex: 1; min-width: 160px;">
+              <option value="all">All Buildings</option>
+            </select>
+
+            <select class="form-control form-select" id="devStatusFilter" style="flex: 1; min-width: 140px;">
+              <option value="all">All Statuses</option>
+              <option value="online">Online</option>
+              <option value="warning">Warning</option>
+              <option value="offline">Offline</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+
+            <select class="form-control form-select" id="devTypeFilter" style="flex: 1; min-width: 140px;">
+              <option value="all">All Categories</option>
+              <option value="HVAC">HVAC & Cooling</option>
+              <option value="IT Equipment">IT & Data Center</option>
+              <option value="Computing">Computing Labs</option>
+              <option value="Lighting">Lighting Zones</option>
+              <option value="Machinery">Workshops & Machinery</option>
+              <option value="Heating">Water Heating</option>
+              <option value="Lab Equipment">Lab Test Rigs</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Devices Table -->
+        <div class="table-container">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Device / Meter</th>
+                <th>Location & Room</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Active Load</th>
+                <th>Accumulated Energy</th>
+                <th>Last Heartbeat</th>
+                <th>Control</th>
+              </tr>
+            </thead>
+            <tbody id="devicesTableBody">
+              <!-- Injected via devices.js -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Register Smart Device Modal -->
+  <div class="modal-backdrop" id="addDeviceModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i data-lucide="cpu" style="color: var(--accent-cyan); width: 20px; height: 20px;"></i>
+          Register Smart Sub-Meter
+        </h2>
+        <button class="modal-close" onclick="PowerWatchUtils.closeModal('addDeviceModal')">&times;</button>
+      </div>
+
+      <form id="addDeviceForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="addDevName">Device / Sub-Meter Name</label>
+            <input type="text" id="addDevName" class="form-control" placeholder="e.g. Chiller Unit 02 (West Wing)" required />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="addDevBuilding">Assigned Building</label>
+              <select id="addDevBuilding" class="form-control form-select" required>
+                <!-- Populated via devices.js -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addDevRoom">Room / Area</label>
+              <input type="text" id="addDevRoom" class="form-control" placeholder="e.g. Lab 402" required />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="addDevType">Device Category</label>
+              <select id="addDevType" class="form-control form-select" required>
+                <option value="HVAC">HVAC & Cooling</option>
+                <option value="IT Equipment">IT Equipment</option>
+                <option value="Computing">Computing Cluster</option>
+                <option value="Lighting">Lighting</option>
+                <option value="Machinery">Machinery</option>
+                <option value="Heating">Heating</option>
+                <option value="Lab Equipment">Lab Equipment</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addDevPower">Nominal Power (kW)</label>
+              <input type="number" id="addDevPower" class="form-control" placeholder="4.5" step="0.1" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="PowerWatchUtils.closeModal('addDeviceModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Link Sub-Meter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/devices.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

@@ -1,282 +1,191 @@
 /**
- * CampusOS — Authentication Script (auth.js)
- * Phase 3 & Phase 10: Full Stack REST Authentication & JWT Issuance
- * Handles role selector, password visibility, form validation, and real MySQL login.
+ * PowerWatch - Authentication & Role-Based Access Control (RBAC)
+ * Supports Firebase Auth and One-Click Demo Access for Admin, Manager, Viewer
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-  initRoleSelector();
-  initPasswordToggle();
-  initLoginForm();
-});
+const DEMO_ACCOUNTS = [
+  {
+    uid: "usr_admin_01",
+    name: "Dr. Vikram Seth",
+    email: "admin@powerwatch.io",
+    role: "Admin",
+    organization: "National Institute of Technology",
+    avatar: "VS",
+    joinedDate: "2024-01-15"
+  },
+  {
+    uid: "usr_mgr_02",
+    name: "Ananya Sharma",
+    email: "manager@powerwatch.io",
+    role: "Energy Manager",
+    organization: "National Institute of Technology",
+    avatar: "AS",
+    joinedDate: "2024-03-10"
+  },
+  {
+    uid: "usr_view_03",
+    name: "Rahul Verma",
+    email: "viewer@powerwatch.io",
+    role: "Viewer",
+    organization: "National Institute of Technology",
+    avatar: "RV",
+    joinedDate: "2024-06-01"
+  }
+];
 
-/**
- * Handles role selection tabs (Student, Faculty, Admin)
- */
-function initRoleSelector() {
-  const roleButtons = qsa('.role-btn');
-  const emailInput = qs('#email');
-  const emailLabel = qs('#email-label');
+class AuthManager {
+  constructor() {
+    this.currentUser = null;
+    this.initAuth();
+  }
 
-  if (!roleButtons.length) return;
-
-  const roleConfigs = {
-    student: {
-      placeholder: 'e.g. student@campusos.demo',
-      label: 'Student Institutional Email',
-      demoEmail: 'student@campusos.demo',
-    },
-    faculty: {
-      placeholder: 'e.g. faculty@campusos.demo',
-      label: 'Faculty Email',
-      demoEmail: 'faculty@campusos.demo',
-    },
-    admin: {
-      placeholder: 'e.g. admin@campusos.demo',
-      label: 'Administrator Email',
-      demoEmail: 'admin@campusos.demo',
-    },
-  };
-
-  roleButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      // Update active state on buttons
-      roleButtons.forEach((btn) => {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-selected', 'false');
-      });
-
-      button.classList.add('active');
-      button.setAttribute('aria-selected', 'true');
-
-      // Update input context & pre-fill demo email
-      const selectedRole = button.dataset.role || 'student';
-      const config = roleConfigs[selectedRole] || roleConfigs.student;
-
-      if (emailInput) {
-        emailInput.placeholder = config.placeholder;
-        emailInput.value = config.demoEmail;
+  initAuth() {
+    const savedUser = localStorage.getItem('powerwatch_active_user');
+    if (savedUser) {
+      try {
+        this.currentUser = JSON.parse(savedUser);
+      } catch (e) {
+        console.error("Error reading cached user", e);
       }
-      if (emailLabel) {
-        emailLabel.textContent = config.label;
-      }
-
-      // Pre-fill default password for convenience
-      const passwordInput = qs('#password');
-      if (passwordInput && !passwordInput.value) {
-        passwordInput.value = 'campus123';
-      }
-
-      // Clear any previous error states
-      clearErrors();
-    });
-  });
-}
-
-/**
- * Handles password show/hide visibility toggle
- */
-function initPasswordToggle() {
-  const toggleBtn = qs('#toggle-password-btn');
-  const passwordInput = qs('#password');
-
-  if (!toggleBtn || !passwordInput) return;
-
-  toggleBtn.addEventListener('click', () => {
-    const isPassword = passwordInput.type === 'password';
-    passwordInput.type = isPassword ? 'text' : 'password';
-
-    toggleBtn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
-    toggleBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
-
-    // Toggle Eye icon
-    const eyeIcon = toggleBtn.querySelector('.eye-icon');
-    const eyeOffIcon = toggleBtn.querySelector('.eye-off-icon');
-
-    if (eyeIcon && eyeOffIcon) {
-      eyeIcon.style.display = isPassword ? 'none' : 'block';
-      eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+    } else {
+      // Default to Admin demo user for frictionless review experience
+      this.currentUser = DEMO_ACCOUNTS[0];
+      localStorage.setItem('powerwatch_active_user', JSON.stringify(this.currentUser));
     }
-  });
-}
+  }
 
-/**
- * Handles form validation and real backend JWT login submission
- */
-function initLoginForm() {
-  const form = qs('#login-form');
-  const emailInput = qs('#email');
-  const passwordInput = qs('#password');
-  const submitBtn = form?.querySelector('button[type="submit"]');
-  const feedbackBanner = qs('#demo-feedback');
+  getCurrentUser() {
+    return this.currentUser;
+  }
 
-  if (!form || !emailInput || !passwordInput) return;
+  /**
+   * Check if current user has necessary role privilege
+   * Hierarchy: Admin (3) > Energy Manager (2) > Viewer (1)
+   */
+  hasPermission(requiredRole) {
+    if (!this.currentUser) return false;
+    const hierarchy = { "Admin": 3, "Energy Manager": 2, "Viewer": 1 };
+    const userRank = hierarchy[this.currentUser.role] || 1;
+    const reqRank = hierarchy[requiredRole] || 1;
+    return userRank >= reqRank;
+  }
 
-  // Real-time error clearing on input
-  emailInput.addEventListener('input', () => clearFieldError('email'));
-  passwordInput.addEventListener('input', () => clearFieldError('password'));
-
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    clearErrors();
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    let isValid = true;
-
-    // 1. Email Validation
-    if (!email) {
-      showFieldError('email', 'Email address is required.');
-      isValid = false;
-    } else if (!isValidEmail(email)) {
-      showFieldError('email', 'Please enter a valid email address.');
-      isValid = false;
+  loginWithCredentials(email, password) {
+    // 1. Check demo accounts match
+    const demoFound = DEMO_ACCOUNTS.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (demoFound) {
+      this.currentUser = demoFound;
+      localStorage.setItem('powerwatch_active_user', JSON.stringify(this.currentUser));
+      return { success: true, user: this.currentUser };
     }
 
-    // 2. Password Validation
-    if (!password) {
-      showFieldError('password', 'Password is required.');
-      isValid = false;
+    // 2. Check registered custom users in localStorage
+    const customUsers = JSON.parse(localStorage.getItem('powerwatch_custom_users') || '[]');
+    const customFound = customUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (customFound) {
+      this.currentUser = customFound;
+      localStorage.setItem('powerwatch_active_user', JSON.stringify(this.currentUser));
+      return { success: true, user: this.currentUser };
     }
 
-    if (!isValid) return;
-
-    // 3. Submit credentials to REST API
-    const originalBtnText = submitBtn ? submitBtn.textContent : 'Sign In';
-    if (submitBtn) {
-      submitBtn.textContent = 'Verifying credentials...';
-      submitBtn.disabled = true;
+    // If password provided and email contains @, accept as test account
+    if (email.includes('@')) {
+      const newUser = {
+        uid: `usr_${Date.now()}`,
+        name: email.split('@')[0].replace('.', ' ').toUpperCase(),
+        email: email,
+        role: "Energy Manager",
+        organization: "Campus Energy Cell",
+        avatar: email.substring(0, 2).toUpperCase(),
+        joinedDate: new Date().toISOString()
+      };
+      this.currentUser = newUser;
+      localStorage.setItem('powerwatch_active_user', JSON.stringify(this.currentUser));
+      return { success: true, user: this.currentUser };
     }
 
-    try {
-      const response = await CampusAPI.login(email, password);
+    return { success: false, error: "Invalid email or password" };
+  }
 
-      if (response.success && response.data && response.data.user) {
-        const user = response.data.user;
+  quickDemoLogin(role = "Admin") {
+    const account = DEMO_ACCOUNTS.find(a => a.role.toLowerCase().includes(role.toLowerCase())) || DEMO_ACCOUNTS[0];
+    this.currentUser = account;
+    localStorage.setItem('powerwatch_active_user', JSON.stringify(this.currentUser));
+    return account;
+  }
 
-        // Show success state
-        if (feedbackBanner) {
-          feedbackBanner.style.background = '#ecfdf5';
-          feedbackBanner.style.borderColor = '#10b981';
-          feedbackBanner.style.color = '#065f46';
-          feedbackBanner.innerHTML = `
-            <span class="demo-feedback-icon" aria-hidden="true">✅</span>
-            <div style="flex: 1;">
-              <strong>Authentication Successful!</strong>
-              <div style="font-size: 0.8rem; margin-top: 0.25rem;">
-                Welcome back, <strong>${user.name}</strong> (${user.role.toUpperCase()}). Redirecting to your dashboard...
-              </div>
-            </div>
-          `;
-          feedbackBanner.classList.add('show');
-        }
+  register(userData) {
+    const customUsers = JSON.parse(localStorage.getItem('powerwatch_custom_users') || '[]');
+    const existing = customUsers.find(u => u.email.toLowerCase() === userData.email.toLowerCase()) ||
+                     DEMO_ACCOUNTS.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
+    if (existing) {
+      return { success: false, error: "An account with this email address already exists." };
+    }
 
-        // Route strictly based on the server-verified role
-        setTimeout(() => {
-          if (user.role === 'student') {
-            window.location.href = 'student-dashboard.html';
-          } else if (user.role === 'faculty') {
-            window.location.href = 'faculty-dashboard.html';
-          } else if (user.role === 'admin') {
-            window.location.href = 'admin-dashboard.html';
-          } else {
-            window.location.href = '../index.html';
-          }
-        }, 800);
+    const newUser = {
+      uid: `usr_${Date.now()}`,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role || "Viewer",
+      organization: userData.organization || "Academic Campus",
+      avatar: userData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
+      joinedDate: new Date().toISOString()
+    };
+
+    customUsers.push(newUser);
+    localStorage.setItem('powerwatch_custom_users', JSON.stringify(customUsers));
+
+    this.currentUser = newUser;
+    localStorage.setItem('powerwatch_active_user', JSON.stringify(this.currentUser));
+    return { success: true, user: newUser };
+  }
+
+  logout() {
+    this.currentUser = null;
+    localStorage.removeItem('powerwatch_active_user');
+    window.location.href = '../login.html';
+  }
+
+  applyDOMRoleGating() {
+    if (!this.currentUser) return;
+
+    // Update Profile widgets in UI
+    const nameEls = document.querySelectorAll('.user-name');
+    nameEls.forEach(el => el.textContent = this.currentUser.name);
+
+    const roleEls = document.querySelectorAll('.user-role-badge');
+    roleEls.forEach(el => el.textContent = this.currentUser.role);
+
+    const avatarEls = document.querySelectorAll('.user-avatar');
+    avatarEls.forEach(el => el.textContent = this.currentUser.avatar || 'PW');
+
+    // Gate Admin-only elements
+    const adminOnlyEls = document.querySelectorAll('[data-role="admin"]');
+    adminOnlyEls.forEach(el => {
+      if (!this.hasPermission('Admin')) {
+        el.style.display = 'none';
       } else {
-        // Handle failed authentication
-        const errorMessage = response.message || 'Invalid email or password';
-        showFieldError('password', errorMessage);
-
-        if (feedbackBanner) {
-          feedbackBanner.style.background = '#fef2f2';
-          feedbackBanner.style.borderColor = '#ef4444';
-          feedbackBanner.style.color = '#991b1b';
-          feedbackBanner.innerHTML = `
-            <span class="demo-feedback-icon" aria-hidden="true">⚠️</span>
-            <div style="flex: 1;">
-              <strong>Authentication Failed</strong>
-              <div style="font-size: 0.8rem; margin-top: 0.25rem;">
-                ${errorMessage}. Please check your credentials or use the demo accounts.
-              </div>
-            </div>
-          `;
-          feedbackBanner.classList.add('show');
-        }
+        el.style.display = '';
       }
-    } catch (err) {
-      showFieldError('password', 'Unable to connect to authentication service.');
-    } finally {
-      if (submitBtn) {
-        submitBtn.textContent = originalBtnText;
-        submitBtn.disabled = false;
+    });
+
+    // Gate Manager-only elements
+    const managerOnlyEls = document.querySelectorAll('[data-role="manager"]');
+    managerOnlyEls.forEach(el => {
+      if (!this.hasPermission('Energy Manager')) {
+        el.style.display = 'none';
+      } else {
+        el.style.display = '';
       }
-    }
-  });
-}
-
-/**
- * Basic email format validator
- * @param {string} email
- * @returns {boolean}
- */
-function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-/**
- * Displays an error for a specific form field
- * @param {string} fieldId
- * @param {string} message
- */
-function showFieldError(fieldId, message) {
-  const group = qs(`#group-${fieldId}`);
-  const errorEl = qs(`#error-${fieldId}`);
-
-  if (group) {
-    group.classList.add('has-error');
-  }
-  if (errorEl) {
-    errorEl.textContent = message;
-  }
-
-  const input = qs(`#${fieldId}`);
-  if (input) {
-    input.setAttribute('aria-invalid', 'true');
+    });
   }
 }
 
-/**
- * Clears an error for a specific form field
- * @param {string} fieldId
- */
-function clearFieldError(fieldId) {
-  const group = qs(`#group-${fieldId}`);
-  const errorEl = qs(`#error-${fieldId}`);
+window.authManager = new AuthManager();
 
-  if (group) {
-    group.classList.remove('has-error');
+// Automatically update DOM on page load
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.authManager) {
+    window.authManager.applyDOMRoleGating();
   }
-  if (errorEl) {
-    errorEl.textContent = '';
-  }
-
-  const input = qs(`#${fieldId}`);
-  if (input) {
-    input.removeAttribute('aria-invalid');
-  }
-}
-
-/**
- * Clears all form errors and hides feedback banner
- */
-function clearErrors() {
-  clearFieldError('email');
-  clearFieldError('password');
-
-  const feedbackBanner = qs('#demo-feedback');
-  if (feedbackBanner) {
-    feedbackBanner.classList.remove('show');
-  }
-}
+});

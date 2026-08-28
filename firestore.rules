@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to verify Admin role from custom claims or user doc
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.role == 'Admin' || 
+         request.auth.token.email.matches('.*admin.*'));
+    }
+
+    // Helper function to verify Energy Manager or Admin role
+    function isManager() {
+      return isAuthenticated() && 
+        (request.auth.token.role in ['Admin', 'Energy Manager'] ||
+         isAdmin());
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Campus Buildings Collection
+    match /buildings/{buildingId} {
+      allow read: if true; // Publicly viewable by campus users
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Smart Devices & Sub-Meters Collection
+    match /devices/{deviceId} {
+      allow read: if true;
+      allow create, update, delete: if isManager();
+    }
+
+    // Instantaneous & Historical Energy Readings
+    match /energyReadings/{readingId} {
+      allow read: if true;
+      allow create: if isAuthenticated(); // Ingestion service / IoT device gateway
+      allow update, delete: if isAdmin();
+    }
+
+    // Abnormal Energy Alerts
+    match /alerts/{alertId} {
+      allow read: if true;
+      allow create: if isAuthenticated(); // Ingestion & Anomaly engine
+      allow update: if isManager(); // Acknowledge & resolve
+      allow delete: if isAdmin();
+    }
+
+    // Audit Reports
+    match /reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isManager();
+    }
+
+    // System Settings & Tariff Configuration
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

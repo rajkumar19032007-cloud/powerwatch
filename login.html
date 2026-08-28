@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — PowerWatch Energy Platform</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <div class="auth-header">
+        <a href="index.html" class="auth-brand">
+          <div class="brand-logo" style="width: 36px; height: 36px;">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+        <p class="auth-subtitle">Sign in to access your campus energy console.</p>
+      </div>
+
+      <!-- Quick 1-Click Demo Login Box -->
+      <div class="demo-login-box">
+        <div class="demo-login-header">
+          <span><i data-lucide="zap" style="width: 14px; height: 14px;"></i> 1-Click Instant Demo Access</span>
+        </div>
+        <div class="demo-roles-grid">
+          <button type="button" class="demo-role-btn" onclick="quickLogin('Admin')">
+            👑 Admin
+          </button>
+          <button type="button" class="demo-role-btn" onclick="quickLogin('Energy Manager')">
+            ⚡ Manager
+          </button>
+          <button type="button" class="demo-role-btn" onclick="quickLogin('Viewer')">
+            👁 Viewer
+          </button>
+        </div>
+      </div>
+
+      <!-- Error Alert -->
+      <div id="authErrorAlert" class="auth-error-alert">
+        <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+        <span id="authErrorMsg">Invalid credentials</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
+            <input type="email" id="loginEmail" class="form-control" placeholder="name@campus.edu" required value="admin@powerwatch.io" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="form-label" for="loginPassword">Password</label>
+            <a href="#" onclick="handleForgotPassword(event)" style="font-size: 0.78rem; color: var(--accent-cyan);">Forgot Password?</a>
+          </div>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="lock" style="width: 16px; height: 16px;"></i></span>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required value="admin123" />
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem;">
+          <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); cursor: pointer;">
+            <input type="checkbox" checked style="accent-color: var(--accent-cyan);" />
+            Remember my session
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full btn-lg">
+          <i data-lucide="log-in" style="width: 18px; height: 18px;"></i> Sign In to PowerWatch
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="register.html">Register New Organization</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    lucide.createIcons();
+
+    function quickLogin(role) {
+      if (window.authManager) {
+        window.authManager.quickDemoLogin(role);
+        PowerWatchUtils.showToast("Signed In Successfully", `Welcome, authenticated as ${role}.`, "success");
+        setTimeout(() => window.location.href = 'dashboard.html', 400);
+      }
+    }
+
+    const form = document.getElementById('loginForm');
+    const errorAlert = document.getElementById('authErrorAlert');
+    const errorMsg = document.getElementById('authErrorMsg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      const res = window.authManager.loginWithCredentials(email, password);
+      if (res.success) {
+        PowerWatchUtils.showToast("Welcome Back", `Signed in as ${res.user.name} (${res.user.role}).`, "success");
+        setTimeout(() => window.location.href = 'dashboard.html', 500);
+      } else {
+        errorAlert.style.display = 'flex';
+        errorMsg.textContent = res.error || "Invalid email or password.";
+      }
+    });
+
+    function handleForgotPassword(e) {
+      e.preventDefault();
+      const email = prompt("Enter your registered email address to receive password reset link:");
+      if (email) {
+        PowerWatchUtils.showToast("Password Reset Dispatched", `A reset link has been dispatched to ${email}.`, "info");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — PowerWatch Energy Platform</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <div class="auth-container" style="max-width: 520px;">
+      <div class="auth-header">
+        <a href="index.html" class="auth-brand">
+          <div class="brand-logo" style="width: 36px; height: 36px;">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+        <p class="auth-subtitle">Register your institution or facility on the cloud grid.</p>
+      </div>
+
+      <!-- Error Alert -->
+      <div id="authErrorAlert" class="auth-error-alert">
+        <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+        <span id="authErrorMsg">Registration failed</span>
+      </div>
+
+      <!-- Register Form -->
+      <form id="registerForm">
+        <div class="form-group">
+          <label class="form-label" for="regName">Full Name</label>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" id="regName" class="form-control" placeholder="Dr. Rajesh Kumar" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Academic / Work Email</label>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
+            <input type="email" id="regEmail" class="form-control" placeholder="rajesh@nitcampus.edu" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regOrg">Organization / University</label>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="building-2" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" id="regOrg" class="form-control" placeholder="National Institute of Technology" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Your Role</label>
+          <div class="role-selector-group">
+            <label class="role-card-option selected" id="roleOptAdmin">
+              <input type="radio" name="roleSelect" value="Admin" checked />
+              <span class="role-title">👑 Admin</span>
+              <span class="role-desc">Full Grid Control</span>
+            </label>
+
+            <label class="role-card-option" id="roleOptManager">
+              <input type="radio" name="roleSelect" value="Energy Manager" />
+              <span class="role-title">⚡ Manager</span>
+              <span class="role-desc">Audits & Alerts</span>
+            </label>
+
+            <label class="role-card-option" id="roleOptViewer">
+              <input type="radio" name="roleSelect" value="Viewer" />
+              <span class="role-title">👁 Viewer</span>
+              <span class="role-desc">Read-Only</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password</label>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="lock" style="width: 16px; height: 16px;"></i></span>
+            <input type="password" id="regPassword" class="form-control" placeholder="At least 6 characters" required minlength="6" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full btn-lg" style="margin-top: 0.5rem;">
+          <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i> Create PowerWatch Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already registered? <a href="login.html">Sign In Here</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    lucide.createIcons();
+
+    // Radio selection visual toggle
+    const roleOptions = document.querySelectorAll('.role-card-option');
+    roleOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        roleOptions.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        opt.querySelector('input').checked = true;
+      });
+    });
+
+    const form = document.getElementById('registerForm');
+    const errorAlert = document.getElementById('authErrorAlert');
+    const errorMsg = document.getElementById('authErrorMsg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const organization = document.getElementById('regOrg').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const role = document.querySelector('input[name="roleSelect"]:checked').value;
+
+      const res = window.authManager.register({ name, email, organization, role, password });
+      if (res.success) {
+        PowerWatchUtils.showToast("Account Created", `Registered as ${name} (${role}).`, "success");
+        setTimeout(() => window.location.href = 'dashboard.html', 500);
+      } else {
+        errorAlert.style.display = 'flex';
+        errorMsg.textContent = res.error || "Registration failed.";
+      }
+    });
+  </script>
+</body>
+</html>

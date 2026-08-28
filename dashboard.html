@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview Dashboard — PowerWatch Smart Energy Platform</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="dashboard.html" class="nav-item active">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="pages/monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+          <span class="pulse-dot" style="margin-left: auto;"></span>
+        </a>
+        <a href="pages/buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="pages/devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="pages/analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="pages/alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger" id="sidebarAlertBadge">1</span>
+        </a>
+        <a href="pages/predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="pages/reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="pages/architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="pages/settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer / Profile -->
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar" id="sidebarUserAvatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Quick Simulation Controls Pill -->
+          <div class="sim-quick-toolbar" title="Simulated IoT Load Modulator">
+            <span style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-family: var(--font-mono); margin-right: 0.2rem;">IoT SIM:</span>
+            <button class="sim-btn-pill" id="simBtnInc">+15%</button>
+            <button class="sim-btn-pill" id="simBtnDec">-15%</button>
+            <button class="sim-btn-pill spike" id="simBtnSpike" title="Trigger Power Spike Anomaly">⚡ Spike</button>
+            <button class="sim-btn-pill" id="simBtnReset" title="Reset Load to Normal">↺ Reset</button>
+          </div>
+
+          <!-- Cloud Connection Status -->
+          <div class="cloud-status-badge demo" id="cloudStatusBadge">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <!-- Notification Bell & Dropdown -->
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn" title="View Notifications">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+              <span class="pulse-dot danger" id="notifUnreadCount" style="position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; padding: 0;"></span>
+            </button>
+
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary);">Notifications & Alerts</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">Mark all read</button>
+              </div>
+              <div class="notification-list" id="notifList">
+                <!-- Injected via notifications.js -->
+              </div>
+              <div class="notification-footer">
+                <a href="pages/alerts.html" style="font-size: 0.78rem; color: var(--accent-cyan); font-weight: 600;">View All Anomaly Records →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Role Badge -->
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Dashboard Page Body -->
+      <main class="dashboard-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Campus Energy Overview</span>
+              <span class="badge badge-success" style="font-size: 0.75rem;"><span class="pulse-dot"></span> LIVE GRID</span>
+            </h1>
+            <p class="page-subtitle">Real-time electrical intelligence across 8 campus facilities and smart sub-meters.</p>
+          </div>
+
+          <div class="page-actions">
+            <a href="pages/reports.html" class="btn btn-secondary btn-sm">
+              <i data-lucide="file-text" style="width: 16px; height: 16px;"></i> Generate Audit
+            </a>
+            <a href="pages/monitoring.html" class="btn btn-primary btn-sm">
+              <i data-lucide="activity" style="width: 16px; height: 16px;"></i> Live Oscilloscope
+            </a>
+          </div>
+        </div>
+
+        <!-- Telemetry Strip -->
+        <div class="telemetry-strip">
+          <div class="telemetry-item">
+            <div class="telemetry-icon"><i data-lucide="zap"></i></div>
+            <div>
+              <div class="telemetry-data-label">Active Power</div>
+              <div class="telemetry-data-val" id="stripLivePower">128.4 kW</div>
+            </div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);"><i data-lucide="gauge"></i></div>
+            <div>
+              <div class="telemetry-data-label">Grid Voltage</div>
+              <div class="telemetry-data-val" id="stripLiveVoltage">231.2 V</div>
+            </div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-icon" style="color: #10b981; background: rgba(16,185,129,0.1);"><i data-lucide="cpu"></i></div>
+            <div>
+              <div class="telemetry-data-label">Total Current</div>
+              <div class="telemetry-data-val" id="stripLiveCurrent">192.4 A</div>
+            </div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-icon" style="color: #a855f7; background: rgba(168,85,247,0.1);"><i data-lucide="radio"></i></div>
+            <div>
+              <div class="telemetry-data-label">Frequency</div>
+              <div class="telemetry-data-val" id="stripLiveFreq">50.01 Hz</div>
+            </div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-icon" style="color: #38bdf8; background: rgba(56,189,248,0.1);"><i data-lucide="shield-check"></i></div>
+            <div>
+              <div class="telemetry-data-label">Power Factor</div>
+              <div class="telemetry-data-val" id="stripLivePF">0.95</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 KPI Stat Cards Grid -->
+        <div class="kpi-grid">
+          <!-- Total Monthly Consumption -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total Consumption</span>
+              <div class="stat-icon-wrapper blue"><i data-lucide="database"></i></div>
+            </div>
+            <div class="stat-value text-gradient-cyan" id="kpiTotalConsumption">16,885 kWh</div>
+            <div class="stat-footer">
+              <span class="stat-trend down"><i data-lucide="arrow-down-right" style="width: 12px; height: 12px;"></i> 3.2%</span>
+              <span>vs last month</span>
+            </div>
+          </div>
+
+          <!-- Today's Consumption -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Today's Consumption</span>
+              <div class="stat-icon-wrapper"><i data-lucide="sun"></i></div>
+            </div>
+            <div class="stat-value" id="kpiTodayConsumption">566.2 kWh</div>
+            <div class="stat-footer">
+              <span class="stat-trend up"><i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i> +1.8%</span>
+              <span>vs yesterday</span>
+            </div>
+          </div>
+
+          <!-- Current Active Power -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Current Power</span>
+              <div class="stat-icon-wrapper warning"><i data-lucide="zap"></i></div>
+            </div>
+            <div class="stat-value text-cyan" id="kpiCurrentPower">128.4 kW</div>
+            <div class="stat-footer">
+              <span class="pulse-dot" style="margin-right: 2px;"></span>
+              <span>Instantaneous telemetry</span>
+            </div>
+          </div>
+
+          <!-- Estimated Cost -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Estimated Cost</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="indian-rupee"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--color-success);" id="kpiEstimatedCost">₹4,246</div>
+            <div class="stat-footer">
+              <span>Tariff: <strong style="color: var(--text-primary); font-family: var(--font-mono);">₹7.50/kWh</strong></span>
+            </div>
+          </div>
+
+          <!-- Efficiency Score -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Efficiency Score</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="shield-check"></i></div>
+            </div>
+            <div class="stat-value text-cyan" id="kpiEfficiencyScore">87%</div>
+            <div class="stat-footer">
+              <span class="badge badge-success" style="font-size: 0.68rem;">Excellent</span>
+              <span>Campus aggregate</span>
+            </div>
+          </div>
+
+          <!-- Active Devices -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Active Meters</span>
+              <div class="stat-icon-wrapper blue"><i data-lucide="cpu"></i></div>
+            </div>
+            <div class="stat-value" id="kpiActiveDevices">158</div>
+            <div class="stat-footer">
+              <span class="pulse-dot" style="margin-right: 2px;"></span>
+              <span>100% telemetry online</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Charts Section -->
+        <div class="grid grid-cols-3 gap-6" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+          <!-- Live Power Streaming Trend Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <i data-lucide="trending-up" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+                  Real-Time Campus Power Stream (1 Hz)
+                </h3>
+                <div class="card-subtitle">Continuous sub-second telemetry feed from smart meter sensors</div>
+              </div>
+              <span class="badge badge-cyan"><span class="pulse-dot"></span> LIVE</span>
+            </div>
+            <div class="chart-container-lg">
+              <canvas id="dashboardLiveTrendChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Building Energy Distribution -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <i data-lucide="pie-chart" style="color: var(--accent-blue); width: 18px; height: 18px;"></i>
+                  Today's Load by Building
+                </h3>
+                <div class="card-subtitle">Daily energy usage breakdown (kWh)</div>
+              </div>
+            </div>
+            <div class="chart-container-lg">
+              <canvas id="dashboardBuildingDistChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Charts & Alerts Stream Row -->
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- Peak Hour Analysis Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <i data-lucide="clock" style="color: var(--color-warning); width: 18px; height: 18px;"></i>
+                  Peak-Hour Load Curve Comparison
+                </h3>
+                <div class="card-subtitle">Diurnal patterns: Academic vs Residential Hostel blocks</div>
+              </div>
+            </div>
+            <div class="chart-container-md">
+              <canvas id="dashboardPeakHoursChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Real-Time Anomaly Stream Feed -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <i data-lucide="alert-triangle" style="color: var(--color-danger); width: 18px; height: 18px;"></i>
+                  Active Anomaly Detections
+                </h3>
+                <div class="card-subtitle">Real-time alerts triggered by automated rule engine</div>
+              </div>
+              <a href="pages/alerts.html" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div id="dashboardAlertsFeed">
+              <!-- Injected via dashboard.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Campus Buildings Grid Overview -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div>
+              <h2 style="font-size: 1.35rem;">Campus Facilities & Sub-Stations</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Click any facility for deep-dive diagnostics, load curves, and sub-meter readings.</p>
+            </div>
+            <a href="pages/buildings.html" class="btn btn-secondary btn-sm">
+              <i data-lucide="grid" style="width: 14px; height: 14px;"></i> All Facilities
+            </a>
+          </div>
+
+          <div class="grid grid-cols-4 gap-4" id="dashboardBuildingCards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+            <!-- Injected via dashboard.js -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/dashboard.js"></script>
+
+  <script>
+    lucide.createIcons();
+
+    // Mobile sidebar toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('mobile-open');
+      });
+    }
+  </script>
+</body>
+</html>

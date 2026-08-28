@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud Architecture & Examiner Guide — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/landing.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+        </a>
+        <a href="buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item active">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="dashboard-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Cloud Computing Architecture & Defense Guide</span>
+              <span class="badge badge-cyan">Capstone Technical Reference</span>
+            </h1>
+            <p class="page-subtitle">Detailed documentation of cloud computing paradigms, NoSQL schema, serverless pipelines, and security rules.</p>
+          </div>
+        </div>
+
+        <!-- 1. Interactive Architecture Flow -->
+        <div class="card" style="margin-bottom: 2rem;">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i data-lucide="cpu" style="color: var(--accent-cyan); width: 20px; height: 20px;"></i>
+              End-to-End Cloud Telemetry Flow
+            </h3>
+          </div>
+
+          <div class="arch-flow-row" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="arch-node">
+              <div class="arch-icon"><i data-lucide="radio"></i></div>
+              <div class="arch-node-title">1. IoT Edge Sensing</div>
+              <div class="arch-node-desc">Current sensors, CT coils, and Modbus smart meters sampling at 1 Hz.</div>
+            </div>
+            <div class="arch-node">
+              <div class="arch-icon"><i data-lucide="cloud-lightning"></i></div>
+              <div class="arch-node-title">2. Serverless API</div>
+              <div class="arch-node-desc">Cloud Functions endpoint validating JWT tokens and normalizing telemetry.</div>
+            </div>
+            <div class="arch-node">
+              <div class="arch-icon"><i data-lucide="database"></i></div>
+              <div class="arch-node-title">3. Cloud Firestore</div>
+              <div class="arch-node-desc">Low-latency NoSQL database with auto-scaling document partitions.</div>
+            </div>
+            <div class="arch-node">
+              <div class="arch-icon"><i data-lucide="zap"></i></div>
+              <div class="arch-node-title">4. Real-Time Engine</div>
+              <div class="arch-node-desc">WebSocket snapshot subscribers updating client browsers without polling.</div>
+            </div>
+            <div class="arch-node">
+              <div class="arch-icon"><i data-lucide="shield-alert"></i></div>
+              <div class="arch-node-title">5. Event Alerts</div>
+              <div class="arch-node-desc">Automated anomaly triggers for spikes, low PF, and nighttime overloads.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. The 12 Cloud Computing Concepts Demonstrated -->
+        <div style="margin-bottom: 2rem;">
+          <h2 style="font-size: 1.35rem; margin-bottom: 1rem; color: var(--text-primary);">12 Cloud Computing Concepts Implemented</h2>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">1. Cloud Authentication (IDaaS)</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Identity-as-a-Service using Firebase Auth with secure salted password hashing, JWT ID token issuance, and session expiration management.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">2. Scalable NoSQL Document Database</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Google Cloud Firestore schema with hierarchical sub-collections (`buildings/{id}/devices`), indexing, and ACID transaction guarantees.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">3. Real-Time Cloud Synchronization</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Bi-directional WebSocket streams pushing changes to all connected operator screens with sub-second latency via `onSnapshot` listeners.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">4. Serverless Edge Computing</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Zero-server infrastructure where backend workloads scale automatically from 0 to thousands of concurrent sensor streams on demand.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">5. IoT Edge-to-Cloud Telemetry Pipeline</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Simulated physical meters generating Voltage, Current, Power, Frequency, and Power Factor metrics with diurnal campus profiles.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">6. Multi-Tenant Campus Hierarchy</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Hierarchical asset data modeling supporting campus-wide aggregation, building sub-meters, and individual circuit breaker diagnostics.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">7. Role-Based Access Control (RBAC)</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Tiered permission governance (Admin, Energy Manager, Viewer) enforcing data isolation and write privileges across sensitive configuration endpoints.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">8. Declarative Cloud Security Rules</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Production-grade `firestore.rules` validating authorization tokens on the database server to prevent unauthorized writes or tampering.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">9. Automated Cloud Report Generation</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                On-demand rendering and export of printable PDF audits and CSV data sets for institutional compliance and energy audits.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">10. Event-Driven Anomaly Detection</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Rule-based event triggers flagging power spikes (>40%), off-hours vampire draws, and power factor degradation in real-time.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">11. Statistical Predictive Forecasting</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Transparent Holt-Winters seasonal exponential smoothing models predicting 24-hour and 7-day electrical demand curves with 95% confidence intervals.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4 style="color: var(--accent-cyan); margin-bottom: 0.35rem;">12. Cost & Carbon Footprint Modeling</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                Dynamic Time-of-Use (ToU) tariff engine calculating base consumption costs, peak penalty incidence, and grid carbon emissions (kg CO₂e).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Firestore NoSQL Collections Schema -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i data-lucide="database" style="color: var(--accent-cyan); width: 20px; height: 20px;"></i>
+              Firestore NoSQL Collections Schema
+            </h3>
+            <span class="badge badge-cyan">Schema Reference</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.82rem;">
+              <strong style="color: var(--accent-cyan);">buildings/</strong> {id}
+              <div style="color: var(--text-secondary); margin-top: 0.25rem;">
+                { name: String, code: String, category: String, currentPower: Number, dailyConsumption: Number, monthlyConsumption: Number, transformerCapacity: Number, efficiencyScore: Number, lastUpdated: Timestamp }
+              </div>
+            </div>
+
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.82rem;">
+              <strong style="color: var(--accent-blue);">devices/</strong> {id}
+              <div style="color: var(--text-secondary); margin-top: 0.25rem;">
+                { name: String, buildingId: String, room: String, type: String, powerKw: Number, voltage: Number, currentA: Number, powerFactor: Number, status: String, lastUpdate: Timestamp }
+              </div>
+            </div>
+
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.82rem;">
+              <strong style="color: var(--color-danger);">alerts/</strong> {id}
+              <div style="color: var(--text-secondary); margin-top: 0.25rem;">
+                { buildingId: String, title: String, description: String, severity: "critical"|"high"|"medium"|"low", currentValue: String, expectedRange: String, status: "active"|"acknowledged"|"resolved", timestamp: Timestamp }
+              </div>
+            </div>
+
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.82rem;">
+              <strong style="color: var(--color-success);">settings/</strong> system
+              <div style="color: var(--text-secondary); margin-top: 0.25rem;">
+                { tariff: { baseRate: Number, peakSurchargePercent: Number, fixedDemandCharge: Number }, thresholds: { spikePercentLimit: Number, minPowerFactor: Number } }
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/notifications.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

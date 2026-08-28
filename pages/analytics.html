@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Energy Analytics & Benchmarks — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+        </a>
+        <a href="buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item active">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="dashboard-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Advanced Energy Analytics</span>
+              <span class="badge badge-cyan">Multi-Dimensional</span>
+            </h1>
+            <p class="page-subtitle">Granular historical consumption, department benchmarks, category distribution, and carbon modeling.</p>
+          </div>
+
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" id="exportAnalyticsBtn">
+              <i data-lucide="download" style="width: 16px; height: 16px;"></i> Export Raw CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Summary KPI Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Monthly Energy</span>
+              <div class="stat-icon-wrapper"><i data-lucide="zap"></i></div>
+            </div>
+            <div class="stat-value text-cyan" id="analyticsMonthlyTotal">16,885 kWh</div>
+            <div class="stat-footer">
+              <span class="stat-trend down"><i data-lucide="arrow-down-right" style="width: 12px; height: 12px;"></i> 2.4%</span>
+              <span>vs previous month</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total Expenditure</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="indian-rupee"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--color-success);" id="analyticsMonthlyCost">₹1,26,638</div>
+            <div class="stat-footer">
+              <span>Includes peak-hour surcharges</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Carbon Footprint</span>
+              <div class="stat-icon-wrapper warning"><i data-lucide="leaf"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--color-warning);" id="analyticsCarbonFootprint">13.8 MT CO₂</div>
+            <div class="stat-footer">
+              <span>Grid factor: 0.82 kg/kWh</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Peak Demand</span>
+              <div class="stat-icon-wrapper danger"><i data-lucide="activity"></i></div>
+            </div>
+            <div class="stat-value" style="color: #ef4444;" id="analyticsPeakDemand">168.4 kW</div>
+            <div class="stat-footer">
+              <span>Max coincident load</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Time-Series Chart Card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <i data-lucide="trending-up" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+                Historical Consumption Trends
+              </h3>
+              <div class="card-subtitle">Aggregated cloud consumption profile across selected intervals</div>
+            </div>
+
+            <!-- Timeframe Selector -->
+            <div style="display: flex; gap: 0.35rem; background: var(--bg-tertiary); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <button class="btn btn-sm analytics-time-btn" data-timeframe="hourly">Hourly</button>
+              <button class="btn btn-sm analytics-time-btn" data-timeframe="daily">Daily</button>
+              <button class="btn btn-sm analytics-time-btn active" data-timeframe="weekly">Weekly</button>
+              <button class="btn btn-sm analytics-time-btn" data-timeframe="monthly">Monthly</button>
+            </div>
+          </div>
+
+          <div class="chart-container-lg">
+            <canvas id="analyticsMainTrendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Secondary Charts Row: Radar & Category Donut -->
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- Radar Benchmark -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <i data-lucide="shield" style="color: var(--color-success); width: 18px; height: 18px;"></i>
+                  Building Efficiency & Transformer Load Radar
+                </h3>
+                <div class="card-subtitle">Multi-building comparative matrix</div>
+              </div>
+            </div>
+            <div class="chart-container-lg">
+              <canvas id="analyticsRadarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Category Donut -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <i data-lucide="pie-chart" style="color: var(--accent-blue); width: 18px; height: 18px;"></i>
+                  Energy Share by Appliance Category
+                </h3>
+                <div class="card-subtitle">End-use distribution breakdown</div>
+              </div>
+            </div>
+            <div class="chart-container-lg">
+              <canvas id="analyticsCategoryChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tariff Cost Breakdown Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <i data-lucide="calculator" style="color: var(--color-warning); width: 18px; height: 18px;"></i>
+                Facility Tariff Cost Breakdown (Base Tariff vs Peak Surcharge)
+              </h3>
+              <div class="card-subtitle">Analysis of peak penalty incidence across campus departments</div>
+            </div>
+          </div>
+          <div class="chart-container-md">
+            <canvas id="analyticsCostBreakdownChart"></canvas>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/analytics.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

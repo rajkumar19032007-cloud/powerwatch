@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictive Load Analytics & Recommendations — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+        </a>
+        <a href="buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item active">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="dashboard-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Predictive Load Analytics</span>
+              <span class="badge badge-cyan">Statistical Regression</span>
+            </h1>
+            <p class="page-subtitle">Multi-horizon seasonal forecasting with confidence intervals and data-driven recommendations.</p>
+          </div>
+        </div>
+
+        <!-- 4 Prediction Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Tomorrow's Forecast</span>
+              <div class="stat-icon-wrapper"><i data-lucide="sun"></i></div>
+            </div>
+            <div class="stat-value text-cyan" id="predTomorrowVal">1,348 kWh</div>
+            <div class="stat-footer">
+              <span class="stat-trend up" id="predTomorrowDiff"><i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i> +4.9% vs today</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Predicted Peak Demand</span>
+              <div class="stat-icon-wrapper warning"><i data-lucide="zap"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--color-warning);" id="predPeakDemandVal">174.2 kW (14:30)</div>
+            <div class="stat-footer">
+              <span>Coincident peak window</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Forecast Confidence</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="shield-check"></i></div>
+            </div>
+            <div class="stat-value text-success" id="predConfidenceVal">94.2%</div>
+            <div class="stat-footer">
+              <span>±8% variance margin</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Potential Monthly Shaving</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="indian-rupee"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--color-success);">₹45,200</div>
+            <div class="stat-footer">
+              <span>Via 4 recommendations</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Forecast Chart Card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <i data-lucide="trending-up" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+                Campus Energy Consumption Forecast with Confidence Intervals
+              </h3>
+              <div class="card-subtitle">Transparent statistical time-series forecasting model with 95% confidence bands</div>
+            </div>
+
+            <div style="display: flex; gap: 0.35rem; background: var(--bg-tertiary); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <button class="btn btn-sm pred-time-btn active" data-timeframe="7d">Next 7 Days</button>
+              <button class="btn btn-sm pred-time-btn" data-timeframe="30d">Next 30 Days</button>
+            </div>
+          </div>
+
+          <div class="chart-container-lg">
+            <canvas id="forecastMainChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 24-Hour Tomorrow Forecast Profile -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <i data-lucide="clock" style="color: var(--accent-blue); width: 18px; height: 18px;"></i>
+                Tomorrow's Hourly Load Profile vs Today's Baseline
+              </h3>
+              <div class="card-subtitle">Identifies anticipated midday and evening peak spikes for pre-emptive load shifting</div>
+            </div>
+          </div>
+          <div class="chart-container-md">
+            <canvas id="forecastHourlyChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Transparent Statistical Methodology Card -->
+        <div class="card" style="background: var(--bg-tertiary); border: 1px solid var(--border-color);">
+          <div style="display: flex; align-items: flex-start; gap: 1rem;">
+            <div class="stat-icon-wrapper blue" style="width: 44px; height: 44px; flex-shrink: 0;">
+              <i data-lucide="info" style="width: 22px; height: 22px;"></i>
+            </div>
+            <div>
+              <h3 style="font-size: 1.05rem; color: var(--text-primary); margin-bottom: 0.35rem;">Transparent Statistical Modeling Methodology</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+                PowerWatch generates transparent statistical forecasts using <strong>Seasonal Exponential Smoothing (Holt-Winters Diurnal Decomposition)</strong> combined with academic calendar weighting. The algorithm calculates moving baselines, day-of-week multipliers (accounting for weekend drops in academic blocks and surges in hostels), and thermal ambient load adjustments rather than obscure black-box claims.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contextual Smart Energy Recommendations -->
+        <div>
+          <div style="margin-bottom: 1.25rem;">
+            <h2 style="font-size: 1.35rem; color: var(--text-primary);">Data-Driven Smart Energy Recommendations</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Actionable optimizations generated from actual sub-meter load curves and tariff structures.</p>
+          </div>
+
+          <div id="smartRecommendationsList">
+            <!-- Injected via predictions.js -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/predictions.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

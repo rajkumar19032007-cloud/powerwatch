@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Energy Monitoring — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item active">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+          <span class="pulse-dot" style="margin-left: auto;"></span>
+        </a>
+        <a href="buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Simulation Toolbar -->
+          <div class="sim-quick-toolbar" title="Simulated IoT Load Modulator">
+            <span style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-family: var(--font-mono); margin-right: 0.2rem;">IoT SIM:</span>
+            <button class="sim-btn-pill" id="simBtnInc">+15%</button>
+            <button class="sim-btn-pill" id="simBtnDec">-15%</button>
+            <button class="sim-btn-pill spike" id="simBtnSpike" title="Trigger Power Spike Anomaly">⚡ Spike</button>
+            <button class="sim-btn-pill" id="simBtnReset" title="Reset Load">↺ Reset</button>
+          </div>
+
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="dashboard-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Real-Time Live Telemetry</span>
+              <span class="badge badge-cyan"><span class="pulse-dot"></span> STREAMING 1000ms</span>
+            </h1>
+            <p class="page-subtitle">Sub-second instantaneous voltage, current, power factor, and multi-phase electrical analytics.</p>
+          </div>
+
+          <div class="page-actions">
+            <select class="form-control form-select" id="monitorBuildingFilter" style="width: 220px;">
+              <option value="all">Entire Campus Grid</option>
+              <option value="bld_cse">CSE Block</option>
+              <option value="bld_ece">ECE Block</option>
+              <option value="bld_mech">Mechanical Block</option>
+              <option value="bld_library">Central Library</option>
+              <option value="bld_comp_ctr">Computer Center</option>
+              <option value="bld_hostel_a">Hostel A (Boys)</option>
+              <option value="bld_hostel_b">Hostel B (Girls)</option>
+              <option value="bld_admin">Administration Block</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 6 Telemetry Digital Meter Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <!-- Active Power -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Active Power (P)</span>
+              <div class="stat-icon-wrapper"><i data-lucide="zap"></i></div>
+            </div>
+            <div class="stat-value text-cyan" id="meterLivePower">128.4 kW</div>
+            <div class="stat-footer">
+              <span class="pulse-dot" style="margin-right: 2px;"></span>
+              <span>1-second sampling</span>
+            </div>
+          </div>
+
+          <!-- Voltage -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Grid Voltage (V)</span>
+              <div class="stat-icon-wrapper warning"><i data-lucide="gauge"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--color-warning);" id="meterLiveVoltage">231.2 V</div>
+            <div class="stat-footer">
+              <span>Nominal: 230V ± 5%</span>
+            </div>
+          </div>
+
+          <!-- Current -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Line Current (I)</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="cpu"></i></div>
+            </div>
+            <div class="stat-value text-success" id="meterLiveCurrent">192.4 A</div>
+            <div class="stat-footer">
+              <span>3-Phase RMS</span>
+            </div>
+          </div>
+
+          <!-- Frequency -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Frequency (f)</span>
+              <div class="stat-icon-wrapper blue"><i data-lucide="radio"></i></div>
+            </div>
+            <div class="stat-value" id="meterLiveFreq">50.01 Hz</div>
+            <div class="stat-footer">
+              <span>Grid Synced</span>
+            </div>
+          </div>
+
+          <!-- Power Factor -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Power Factor (PF)</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="shield-check"></i></div>
+            </div>
+            <div class="stat-value text-cyan" id="meterLivePF">0.95</div>
+            <div class="stat-footer">
+              <span class="badge badge-success" style="font-size: 0.65rem;">Compliant (>0.90)</span>
+            </div>
+          </div>
+
+          <!-- Reactive Power -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Reactive Power (Q)</span>
+              <div class="stat-icon-wrapper blue"><i data-lucide="activity"></i></div>
+            </div>
+            <div class="stat-value" style="color: #a855f7;" id="meterLiveKVAR">42.2 kVAR</div>
+            <div class="stat-footer">
+              <span>APFC Controlled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Multi-Trace Oscilloscope Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <i data-lucide="activity" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+                Real-Time Telemetry Oscilloscope (Active Power, Voltage & Current)
+              </h3>
+              <div class="card-subtitle">Continuous rolling 40-second waveform with multi-axis measurement</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="badge badge-cyan">LIVE ● CONNECTED</span>
+            </div>
+          </div>
+          <div class="chart-container-lg" style="height: 380px;">
+            <canvas id="liveOscilloscopeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 3-Phase Electrical Balance Breakdown -->
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- 3-Phase Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i data-lucide="layers" style="color: var(--accent-blue); width: 18px; height: 18px;"></i>
+                3-Phase Load Balance (L1, L2, L3)
+              </h3>
+              <span class="badge badge-success">Balanced Grid</span>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <!-- Phase L1 -->
+              <div style="background: var(--bg-tertiary); padding: 0.9rem; border-radius: var(--radius-md); border-left: 4px solid #ef4444;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                  <strong style="color: #f87171;">Phase R / L1 (Red)</strong>
+                  <span class="font-mono" id="phaseL1V" style="color: var(--text-primary); font-weight: 700;">231.6 V</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                  <span>Current: <strong class="font-mono" id="phaseL1A" style="color: var(--accent-cyan);">65.4 A</strong></span>
+                  <span>Harmonics THD: 1.8%</span>
+                </div>
+              </div>
+
+              <!-- Phase L2 -->
+              <div style="background: var(--bg-tertiary); padding: 0.9rem; border-radius: var(--radius-md); border-left: 4px solid #f59e0b;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                  <strong style="color: #fbbf24;">Phase Y / L2 (Yellow)</strong>
+                  <span class="font-mono" id="phaseL2V" style="color: var(--text-primary); font-weight: 700;">231.0 V</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                  <span>Current: <strong class="font-mono" id="phaseL2A" style="color: var(--accent-cyan);">63.5 A</strong></span>
+                  <span>Harmonics THD: 2.1%</span>
+                </div>
+              </div>
+
+              <!-- Phase L3 -->
+              <div style="background: var(--bg-tertiary); padding: 0.9rem; border-radius: var(--radius-md); border-left: 4px solid #3b82f6;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                  <strong style="color: #60a5fa;">Phase B / L3 (Blue)</strong>
+                  <span class="font-mono" id="phaseL3V" style="color: var(--text-primary); font-weight: 700;">231.0 V</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                  <span>Current: <strong class="font-mono" id="phaseL3A" style="color: var(--accent-cyan);">63.5 A</strong></span>
+                  <span>Harmonics THD: 1.9%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Simulator Load Injector -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i data-lucide="sliders" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+                Simulated IoT Load Injection Panel
+              </h3>
+              <span class="badge badge-cyan">Admin / Testing</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.5;">
+              Modulate simulated campus electrical load in real-time or inject transient faults to verify automated anomaly triggers.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <button class="btn btn-secondary" onclick="window.iotSimulator.increaseLoad(25); PowerWatchUtils.showToast('Load Increased', '+25% grid demand injected.', 'info');">
+                <i data-lucide="trending-up" style="width: 16px; height: 16px; color: var(--color-warning);"></i> +25% Grid Load
+              </button>
+              <button class="btn btn-secondary" onclick="window.iotSimulator.decreaseLoad(25); PowerWatchUtils.showToast('Load Decreased', '-25% grid demand reduced.', 'info');">
+                <i data-lucide="trending-down" style="width: 16px; height: 16px; color: var(--color-success);"></i> -25% Grid Load
+              </button>
+              <button class="btn btn-outline-danger" onclick="window.iotSimulator.injectAnomaly('spike', 'bld_cse');">
+                <i data-lucide="zap" style="width: 16px; height: 16px;"></i> Inject Power Spike
+              </button>
+              <button class="btn btn-secondary" onclick="window.iotSimulator.injectAnomaly('low_pf', 'bld_comp_ctr');">
+                <i data-lucide="alert-triangle" style="width: 16px; height: 16px; color: var(--color-warning);"></i> Inject Low PF (0.78)
+              </button>
+            </div>
+
+            <button class="btn btn-outline-cyan w-full" onclick="window.iotSimulator.resetLoad(); PowerWatchUtils.showToast('Simulation Restored', 'Grid returned to standard nominal profile.', 'success');">
+              <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i> Reset All Simulated Loads to Normal (1.0x)
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Building Telemetry Snapshot Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i data-lucide="table" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+              Sub-Meter Telemetry Stream by Campus Facility
+            </h3>
+            <span class="badge badge-neutral">Auto-Refreshing (1s)</span>
+          </div>
+
+          <div class="table-container">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Facility</th>
+                  <th>Active Power</th>
+                  <th>Voltage</th>
+                  <th>Current</th>
+                  <th>Power Factor</th>
+                  <th>Frequency</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="liveBuildingTableBody">
+                <!-- Injected via monitoring.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/simulator.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/monitoring.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

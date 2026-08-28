@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Buildings — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+        </a>
+        <a href="buildings.html" class="nav-item active">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="dashboard-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>Campus Facilities Management</span>
+              <span class="badge badge-cyan">8 Buildings Connected</span>
+            </h1>
+            <p class="page-subtitle">Sub-metered departmental buildings, academic complexes, hostels, and workshops.</p>
+          </div>
+
+          <div class="page-actions">
+            <button class="btn btn-primary btn-sm" data-role="admin" onclick="PowerWatchUtils.openModal('addBuildingModal')">
+              <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Add Facility
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls Bar -->
+        <div class="card" style="padding: 1rem 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 280px;">
+              <div class="input-with-icon" style="flex: 1;">
+                <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                <input type="text" class="form-control" id="bldSearchInput" placeholder="Filter by building name or code (e.g. 'CSE', 'HSTL')..." />
+              </div>
+              
+              <select class="form-control form-select" id="bldCategoryFilter" style="width: 180px;">
+                <option value="all">All Categories</option>
+                <option value="Academic">Academic & Labs</option>
+                <option value="Residential">Residential Hostels</option>
+                <option value="Data Center">Data Center / Servers</option>
+                <option value="Workshops">Heavy Machinery</option>
+                <option value="Study">Library & Archives</option>
+              </select>
+
+              <select class="form-control form-select" id="bldSortSelect" style="width: 180px;">
+                <option value="power-desc">Highest Load (kW)</option>
+                <option value="power-asc">Lowest Load (kW)</option>
+                <option value="consumption-desc">Monthly Usage (kWh)</option>
+                <option value="efficiency-desc">Efficiency Score (%)</option>
+                <option value="name-asc">Alphabetical (A-Z)</option>
+              </select>
+            </div>
+
+            <!-- View Toggles -->
+            <div style="display: flex; gap: 0.35rem; background: var(--bg-secondary); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <button class="btn btn-icon btn-sm active" id="btnViewGrid" title="Grid View">
+                <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+              </button>
+              <button class="btn btn-icon btn-sm" id="btnViewTable" title="Table View">
+                <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Container -->
+        <div class="grid grid-cols-4 gap-6" id="buildingsGridContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+          <!-- Injected via buildings.js -->
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container" id="buildingsTableContainer" style="display: none;">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Facility Name</th>
+                <th>Category</th>
+                <th>Current Load</th>
+                <th>Today (kWh)</th>
+                <th>Monthly (kWh)</th>
+                <th>Est. Monthly Cost</th>
+                <th>Efficiency</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="buildingsTableBody">
+              <!-- Injected via buildings.js -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Building Deep-Dive Detail Modal -->
+  <div class="modal-backdrop" id="buildingDetailModal">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="modalBldTitle">CSE Block</h2>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;" id="modalBldCode">CSE-01 • Academic & Labs • 35,000 sq.ft</div>
+        </div>
+        <button class="modal-close" onclick="PowerWatchUtils.closeModal('buildingDetailModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 6 Metrics Summary -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Instantaneous Load</span>
+            <div class="font-mono" id="modalBldPower" style="font-size: 1.35rem; font-weight: 700; color: var(--accent-cyan); margin-top: 0.2rem;">18.7 kW</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Today's Energy</span>
+            <div class="font-mono" id="modalBldDaily" style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-top: 0.2rem;">76.4 kWh</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Monthly Total</span>
+            <div class="font-mono" id="modalBldMonthly" style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-top: 0.2rem;">2,184 kWh</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Est. Monthly Cost</span>
+            <div class="font-mono" id="modalBldCost" style="font-size: 1.35rem; font-weight: 700; color: var(--color-success); margin-top: 0.2rem;">₹16,380</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Efficiency Rating</span>
+            <div class="font-mono" id="modalBldEfficiency" style="font-size: 1.35rem; font-weight: 700; color: var(--accent-cyan); margin-top: 0.2rem;">82%</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Peak Window</span>
+            <div class="font-mono" id="modalBldPeak" style="font-size: 1.1rem; font-weight: 600; color: var(--color-warning); margin-top: 0.35rem;">14:00 - 15:00</div>
+          </div>
+        </div>
+
+        <!-- 24-Hour Load Profile Chart -->
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-primary);">24-Hour Load Curve Profile (kW)</h4>
+          <div style="height: 220px; width: 100%; position: relative;">
+            <canvas id="bldDetail24hChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Weekly Chart -->
+        <div>
+          <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-primary);">7-Day Consumption History (kWh)</h4>
+          <div style="height: 180px; width: 100%; position: relative;">
+            <canvas id="bldDetailWeeklyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="PowerWatchUtils.closeModal('buildingDetailModal')">Close</button>
+        <a href="reports.html" class="btn btn-primary">Generate Facility Audit Report</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Building Modal (Admin Only) -->
+  <div class="modal-backdrop" id="addBuildingModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i data-lucide="building-2" style="color: var(--accent-cyan); width: 20px; height: 20px;"></i>
+          Add New Campus Facility
+        </h2>
+        <button class="modal-close" onclick="PowerWatchUtils.closeModal('addBuildingModal')">&times;</button>
+      </div>
+
+      <form id="addBuildingForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="addBldName">Facility / Building Name</label>
+            <input type="text" id="addBldName" class="form-control" placeholder="e.g. Bio-Tech Research Complex" required />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="addBldCode">Campus Code</label>
+              <input type="text" id="addBldCode" class="form-control" placeholder="e.g. BIO-09" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addBldCategory">Category</label>
+              <select id="addBldCategory" class="form-control form-select" required>
+                <option value="Academic & Labs">Academic & Labs</option>
+                <option value="Residential">Residential Hostel</option>
+                <option value="Data Center & Server Farm">Data Center & Servers</option>
+                <option value="Workshops & Heavy Machinery">Workshops & Machinery</option>
+                <option value="Offices & Council">Offices & Admin</option>
+                <option value="Study & Archives">Library & Study</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="addBldCap">Transformer Rating (kW)</label>
+              <input type="number" id="addBldCap" class="form-control" placeholder="100" min="10" max="1000" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addBldArea">Floor Area (sq. ft)</label>
+              <input type="number" id="addBldArea" class="form-control" placeholder="32000" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="PowerWatchUtils.closeModal('addBuildingModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Campus Grid</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/simulator.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/buildings.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

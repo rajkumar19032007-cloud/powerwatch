@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System & Tariff Settings — PowerWatch</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-name" style="text-decoration: none;">
+          <div class="brand-logo">
+            <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+          </div>
+          <span>Power</span>Watch
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Monitoring</div>
+        <a href="../dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <i data-lucide="activity"></i>
+          <span>Live Telemetry</span>
+        </a>
+        <a href="buildings.html" class="nav-item">
+          <i data-lucide="building-2"></i>
+          <span>Campus Buildings</span>
+        </a>
+        <a href="devices.html" class="nav-item">
+          <i data-lucide="cpu"></i>
+          <span>Smart Devices</span>
+        </a>
+
+        <div class="nav-section-title">Intelligence</div>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Energy Analytics</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <i data-lucide="alert-octagon"></i>
+          <span>Anomaly Alerts</span>
+          <span class="nav-badge badge-danger">1</span>
+        </a>
+        <a href="predictions.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Load Predictions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>Audit Reports</span>
+        </a>
+
+        <div class="nav-section-title">Cloud System</div>
+        <a href="architecture.html" class="nav-item">
+          <i data-lucide="server"></i>
+          <span>Cloud Architecture</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+          <i data-lucide="settings"></i>
+          <span>System Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-widget">
+          <div class="user-avatar">VS</div>
+          <div class="user-details">
+            <div class="user-name">Dr. Vikram Seth</div>
+            <div class="user-role-badge">Admin</div>
+          </div>
+          <button class="btn-logout" onclick="window.authManager.logout()" title="Sign Out">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="global-search">
+            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+            <input type="text" placeholder="Quick search campus assets..." readonly id="globalSearchTrigger" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="cloud-status-badge demo">
+            <span class="pulse-dot cyan"></span>
+            <span>DEMO MODE</span>
+          </div>
+
+          <div class="notification-menu-wrapper">
+            <button class="btn-icon" id="notifBellBtn">
+              <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="notification-dropdown" id="notifDropdown">
+              <div class="notification-header">
+                <span style="font-size: 0.9rem; font-weight: 700;">Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.notificationManager.markAllRead()" style="font-size: 0.7rem;">Clear</button>
+              </div>
+              <div class="notification-list" id="notifList"></div>
+            </div>
+          </div>
+
+          <span class="badge badge-cyan user-role-badge">ADMIN</span>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="dashboard-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>
+              <span>System & Tariff Settings</span>
+              <span class="badge badge-cyan">Configuration</span>
+            </h1>
+            <p class="page-subtitle">Configure electricity tariffs, alert thresholds, organization profiles, and cloud connections.</p>
+          </div>
+        </div>
+
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- 1. Energy Tariff Configuration -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i data-lucide="indian-rupee" style="color: var(--color-success); width: 18px; height: 18px;"></i>
+                Electricity Tariff Engine
+              </h3>
+              <span class="badge badge-success">Active</span>
+            </div>
+
+            <form id="tariffSettingsForm">
+              <div class="form-group">
+                <label class="form-label" for="settingBaseTariff">Base Energy Rate (₹ / kWh)</label>
+                <input type="number" id="settingBaseTariff" class="form-control font-mono" step="0.1" value="7.50" required />
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Standard daytime flat energy consumption rate.</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="settingPeakSurcharge">Peak Surcharge (%)</label>
+                  <input type="number" id="settingPeakSurcharge" class="form-control font-mono" value="20" required />
+                  <span style="font-size: 0.72rem; color: var(--text-muted);">10:00–14:00 & 18:00–22:00</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingOffPeakDiscount">Off-Peak Rebate (%)</label>
+                  <input type="number" id="settingOffPeakDiscount" class="form-control font-mono" value="10" required />
+                  <span style="font-size: 0.72rem; color: var(--text-muted);">23:00–06:00 (Night rate)</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="settingFixedDemand">Fixed Demand Charge (₹ / kW / mo)</label>
+                <input type="number" id="settingFixedDemand" class="form-control font-mono" value="450" required />
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm">Save Tariff Rates</button>
+            </form>
+          </div>
+
+          <!-- 2. Alert & Anomaly Thresholds -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i data-lucide="alert-triangle" style="color: var(--color-warning); width: 18px; height: 18px;"></i>
+                Anomaly Engine Thresholds
+              </h3>
+              <span class="badge badge-warning">Rule Engine</span>
+            </div>
+
+            <form id="thresholdSettingsForm">
+              <div class="form-group">
+                <label class="form-label" for="settingSpikeLimit">Power Spike Alert Trigger (%)</label>
+                <input type="number" id="settingSpikeLimit" class="form-control font-mono" value="40" required />
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Trigger alert if load surges > 40% above 15-min baseline.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="settingNightLimit">Nighttime Academic Load Limit (kW)</label>
+                <input type="number" id="settingNightLimit" class="form-control font-mono" value="15" required />
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Allowable vampire load in labs between 23:00 and 05:00.</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="settingMinPf">Min Power Factor</label>
+                  <input type="number" id="settingMinPf" class="form-control font-mono" step="0.01" value="0.88" required />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingOverloadMins">Overload Delay (Mins)</label>
+                  <input type="number" id="settingOverloadMins" class="form-control font-mono" value="20" required />
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm">Update Threshold Rules</button>
+            </form>
+          </div>
+
+          <!-- 3. Campus & Organization Profile -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i data-lucide="building" style="color: var(--accent-cyan); width: 18px; height: 18px;"></i>
+                Institution & Campus Profile
+              </h3>
+            </div>
+
+            <form id="orgSettingsForm">
+              <div class="form-group">
+                <label class="form-label" for="settingOrgName">Institution Name</label>
+                <input type="text" id="settingOrgName" class="form-control" value="National Institute of Technology" required />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="settingCampusCode">Campus Code</label>
+                  <input type="text" id="settingCampusCode" class="form-control font-mono" value="NIT-CAMPUS-01" required />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingGridCapacity">Grid Capacity (kVA)</label>
+                  <input type="number" id="settingGridCapacity" class="form-control font-mono" value="750" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="settingLocation">Physical Location</label>
+                <input type="text" id="settingLocation" class="form-control" value="Main Tech Hub, Block 4" required />
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+            </form>
+          </div>
+
+          <!-- 4. Firebase Cloud Database Configuration -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i data-lucide="cloud" style="color: var(--accent-blue); width: 18px; height: 18px;"></i>
+                Cloud Firebase Configuration
+              </h3>
+              <span class="badge badge-cyan">Zero-Setup</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5;">
+              PowerWatch works out of the box in <strong>Demo Simulation Mode</strong>. To connect your live Firebase project, enter your web app configuration below.
+            </p>
+
+            <form id="firebaseSettingsForm">
+              <div class="form-group">
+                <label class="form-label" for="settingFbApiKey">Firebase API Key</label>
+                <input type="text" id="settingFbApiKey" class="form-control font-mono" placeholder="AIzaSy..." />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="settingFbProjectId">Project ID</label>
+                  <input type="text" id="settingFbProjectId" class="form-control font-mono" placeholder="my-energy-project" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingFbAppId">App ID</label>
+                  <input type="text" id="settingFbAppId" class="form-control font-mono" placeholder="1:12345:web:..." />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-primary); cursor: pointer;">
+                  <input type="checkbox" id="settingUseLiveFirebase" style="accent-color: var(--accent-cyan);" />
+                  Enable Live Cloud Firestore Sync (requires valid project)
+                </label>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button type="submit" class="btn btn-primary btn-sm">Save Cloud Settings</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id="btnResetDemoData">Reset Grid Data</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/settings.js"></script>
+
+  <script>
+    lucide.createIcons();
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('mainSidebar');
+    if (mobileBtn && sidebar) {
+      mobileBtn.addEventListener('click', () => sidebar.classList.toggle('mobile-open'));
+    }
+  </script>
+</body>
+</html>

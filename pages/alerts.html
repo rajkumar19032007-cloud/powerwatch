@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cloud Energy Audit Reports — PowerWatch</title>
+  <title>Abnormal Energy Detection & Smart Alerts — PowerWatch</title>
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../css/global.css" />
@@ -52,7 +52,7 @@
           <i data-lucide="bar-chart-3"></i>
           <span>Energy Analytics</span>
         </a>
-        <a href="alerts.html" class="nav-item">
+        <a href="alerts.html" class="nav-item active">
           <i data-lucide="alert-octagon"></i>
           <span>Anomaly Alerts</span>
           <span class="nav-badge badge-danger">1</span>
@@ -61,7 +61,7 @@
           <i data-lucide="trending-up"></i>
           <span>Load Predictions</span>
         </a>
-        <a href="reports.html" class="nav-item active">
+        <a href="reports.html" class="nav-item">
           <i data-lucide="file-text"></i>
           <span>Audit Reports</span>
         </a>
@@ -91,7 +91,7 @@
       </div>
     </aside>
 
-    <!-- Main Wrapper -->
+    <!-- Main Content -->
     <div class="main-wrapper">
       <header class="topbar">
         <div class="topbar-left">
@@ -130,53 +130,87 @@
 
       <!-- Content -->
       <main class="dashboard-content">
-        <div class="page-header no-print">
+        <div class="page-header">
           <div class="page-title-group">
             <h1>
-              <span>Cloud Report Generator</span>
-              <span class="badge badge-cyan">Print & PDF Ready</span>
+              <span>Abnormal Energy Detection & Alerts</span>
+              <span class="badge badge-danger">Rule Engine Active</span>
             </h1>
-            <p class="page-subtitle">Generate official executive audits, financial tariff summaries, and compliance reports.</p>
+            <p class="page-subtitle">Real-time detection of sudden power surges, nocturnal baseline violations, and degraded power factors.</p>
           </div>
 
           <div class="page-actions">
-            <button class="btn btn-secondary btn-sm" id="btnDownloadReportCSV">
-              <i data-lucide="download" style="width: 16px; height: 16px;"></i> Export CSV
+            <button class="btn btn-outline-danger btn-sm" id="simTriggerSpikeBtn" data-role="admin">
+              <i data-lucide="zap" style="width: 16px; height: 16px;"></i> Simulate Power Surge
             </button>
-            <button class="btn btn-primary btn-sm" id="btnPrintReport">
-              <i data-lucide="printer" style="width: 16px; height: 16px;"></i> Print / Save PDF
-            </button>
-          </div>
-        </div>
-
-        <!-- Configuration Bar -->
-        <div class="card no-print" style="padding: 1.25rem;">
-          <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
-              <label class="form-label" for="reportTypeSelect">Report Template</label>
-              <select id="reportTypeSelect" class="form-control form-select">
-                <option value="monthly">Monthly Financial & Consumption Audit</option>
-                <option value="weekly">Weekly Campus Executive Summary</option>
-                <option value="daily">Daily Energy Consumption Audit</option>
-              </select>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
-              <label class="form-label" for="reportBuildingSelect">Target Facility</label>
-              <select id="reportBuildingSelect" class="form-control form-select">
-                <!-- Injected via reports.js -->
-              </select>
-            </div>
-
-            <button class="btn btn-primary" id="btnGenerateReport">
-              <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i> Re-Generate Preview
+            <button class="btn btn-secondary btn-sm" id="simTriggerLowPfBtn" data-role="admin">
+              <i data-lucide="alert-triangle" style="width: 16px; height: 16px; color: var(--color-warning);"></i> Simulate Low PF
             </button>
           </div>
         </div>
 
-        <!-- Printable Live Report Preview Container -->
-        <div id="reportPreviewContainer">
-          <!-- Injected via reports.js -->
+        <!-- 4 Alert Summary Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total Recorded</span>
+              <div class="stat-icon-wrapper blue"><i data-lucide="database"></i></div>
+            </div>
+            <div class="stat-value" id="alertStatTotal">3</div>
+            <div class="stat-footer"><span>Logged anomalies</span></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Active Queue</span>
+              <div class="stat-icon-wrapper danger"><i data-lucide="alert-circle"></i></div>
+            </div>
+            <div class="stat-value text-danger" id="alertStatActive">2</div>
+            <div class="stat-footer"><span class="pulse-dot danger" style="margin-right: 2px;"></span><span>Needs investigation</span></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Critical Breaches</span>
+              <div class="stat-icon-wrapper danger"><i data-lucide="alert-octagon"></i></div>
+            </div>
+            <div class="stat-value text-danger" id="alertStatCritical">1</div>
+            <div class="stat-footer"><span>Overload > 40%</span></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Resolved</span>
+              <div class="stat-icon-wrapper success"><i data-lucide="check-circle-2"></i></div>
+            </div>
+            <div class="stat-value text-success" id="alertStatResolved">0</div>
+            <div class="stat-footer"><span>Action completed</span></div>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="card" style="padding: 1rem 1.25rem;">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <select class="form-control form-select" id="alertStatusFilter" style="flex: 1; min-width: 180px;">
+              <option value="all">All Alert Statuses</option>
+              <option value="active">Active (Unresolved)</option>
+              <option value="acknowledged">Acknowledged</option>
+              <option value="resolved">Resolved</option>
+            </select>
+
+            <select class="form-control form-select" id="alertSeverityFilter" style="flex: 1; min-width: 180px;">
+              <option value="all">All Severities</option>
+              <option value="critical">Critical Only</option>
+              <option value="high">High Severity</option>
+              <option value="medium">Medium Severity</option>
+              <option value="low">Low Severity</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Alerts Stream -->
+        <div id="alertsListContainer">
+          <!-- Injected via alerts.js -->
         </div>
       </main>
     </div>
@@ -186,8 +220,9 @@
   <script src="../js/utils.js"></script>
   <script src="../js/firebase-config.js"></script>
   <script src="../js/auth.js"></script>
+  <script src="../js/simulator.js"></script>
   <script src="../js/notifications.js"></script>
-  <script src="../js/reports.js"></script>
+  <script src="../js/alerts.js"></script>
 
   <script>
     lucide.createIcons();
